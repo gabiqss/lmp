@@ -1,0 +1,282 @@
+{% extends 'layouts/base.html' %}
+{% block content %} 
+<div class="row justify-content-center mt-4 py-4 mb-5">
+  <div class="col-12 col-xl-9">
+    <form action="#" method="post" class="card border-0 shadow p-3 pb-4 mb-4">
+      <div class="card-header mx-lg-4 p-0 py-3 py-lg-4 mb-4 mb-md-0">
+          <h3 class="h5 mb-0">Calibração</h3> 
+      </div>
+      <div class="card-body p-0 p-md-4">
+        {% csrf_token %} 
+        {% if not ordem_de_servico %}
+        <div class="row justify-content-center">
+            <div class="col-12"> 
+                <div class="form-group mb-4">
+                  <label for="inputState">Ordem de Serviço</label>
+                  <select id="inputState" class="form-control" name="id_os">
+                    <option value=0 selected>Selecione a ordem de serviço...</option>
+                    {% for os in os_abertas %}
+                    <option value="{{ os.id }}">{{ os }}</option>
+                    {% endfor %}
+                  </select>
+                </div> 
+            </div> 
+          {% endif %}
+            {% if ordem_de_servico %} 
+                {% if selected_instrument %} 
+                  <div class="row justify-content-between mb-2 mb-md-3">
+                    <div class="col-sm ">
+                      <h5 class="mb-3">Informações do Cliente</h5>
+                      <div> 
+                        <dl class="row text-sm-right ">
+                          <dt class="col-12"><strong>Cliente</strong>
+                          </dt>
+                          <dd class="col-12 mb-3">{{ ordem_de_servico.equipamento.orcamento.solicitante }}</dd>
+                          <dt class="col-12"><strong>Endereço:</strong>
+                          </dt>
+                          <dd class="col-12 mb-3">{{ ordem_de_servico.equipamento.orcamento.solicitante.address }}</dd>
+                          <dt class="col-12"><strong>Número do Endereço:</strong>
+                          </dt>
+                          <dd class="col-12 mb-3">{{ ordem_de_servico.equipamento.orcamento.solicitante.address_number }}</dd>
+                          <dt class="col-12"><strong>Complemento do Endereço:</strong>
+                          </dt>
+                          <dd class="col-12 mb-3">{{ ordem_de_servico.equipamento.orcamento.solicitante.address_complement }}</dd>
+                        </dl>
+                      </div>
+                    </div>  
+                    <div class="col-sm-5">
+                      <h5 class="mb-3">Informações do Instrumento</h5>
+                      <div>
+                        <dl class="row text-sm-right">
+                          <dt><strong>Código</strong>
+                          </dt>
+                          <dd class="mb-3">{{ selected_instrument.code }}</dd>
+                          <dt><strong>Nome:</strong>
+                          </dt>
+                          <dd>{{  selected_instrument.serial_number }}</dd> 
+                        </dl>
+                      </div> 
+                    </div> 
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="calculadora-tab" data-bs-toggle="tab" data-bs-target="#calculadora" type="button" role="tab" aria-controls="calculadora" aria-selected="true">Calculadora</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="resultados-tab" data-bs-toggle="tab" data-bs-target="#resultados" type="button" role="tab" aria-controls="resultados" aria-selected="false">Resultados</button>
+                      </li> 
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                      <div class="tab-pane fade show active" id="calculadora" role="tabpanel" aria-labelledby="calculadora-tab">
+                        <form method="post" class="needs-validation mt-4" id="calculadora-form">
+                          {% csrf_token %}
+                          
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col">Número</th>
+                                {% for item in colunas %}
+                                  <th scope="col">Valor {{ item }}</th>
+                                {% endfor %}
+                               
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for j in valores %}
+                                <tr>
+                                  <td scope="row">Leitura {{ j }}</td>
+                                  {% for i in colunas %}
+                                    <td><input type="number" step="any" name="numero {{ j }}.{{ i }}" class="form-control"></td>
+                                  {% endfor %}
+                                </tr>
+                              {% endfor %}
+                              <tr>
+                                <td scope="row">Deriva</td>
+                                <td scope="row">U</td>
+                                <td scope="row">K</td>
+                              </tr>
+                                <td><input type="number" step="any" name="deriva" class="form-control"></td>
+                                <td><input type="number" step="any" name="u_padrao" class="form-control"></td>
+                                <td><input type="number" step="any" name="k" class="form-control"></td>
+                            </tbody>
+                          </table>
+                          
+                          <br>
+                          <input type="hidden" name="id_os" value="{{ ordem_de_servico.id }}"> {# Retain the customer value #}
+                          <input type="hidden" name="instrumentSelect" value="{{ selected_instrument.id }}"> {# Retain the selected instrument value #}
+                          <button type="submit" class="btn btn-primary" id="calcular-btn">Calcular</button>
+                        </form> 
+                      </div>
+                      <div class="tab-pane fade" id="resultados" role="tabpanel" aria-labelledby="resultados-tab">
+                        {% if resultados %} 
+                        <div class="table-responsive mt-4">
+                          <table class="table table-striped mb-4">
+                            <thead>
+                              <tr>
+                                <th>Descrição</th>
+                                
+                                <th>Valor {{ i }}</th>
+                              
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>Valor de referência</td>
+                                <td>{{ resultados.valor_ref }}</td>
+                              </tr>
+                              <tr>
+                                <td>Valores informados</td>
+                                <td>{{ resultados.numeros }}</td>
+                              </tr>
+                              <tr>
+                                <td>Média</td>
+                                <td>{{ resultados.media }}</td>
+                              </tr>
+                              <tr>
+                                <td>Desvio padrão da amostra</td>
+                                <td>{{ resultados.desvio_padrao_amostra }}</td>
+                              </tr>
+                              <tr>
+                                <td>Incerteza</td>
+                                <td>{{ resultados.incerteza }}</td>
+                              </tr>
+                              <tr>
+                                <td>Incerteza menor</td>
+                                <td>{{ resultados.incerteza_menor }}</td>
+                              </tr>
+                              <tr>
+                                <td>Tendência</td>
+                                <td>{{ resultados.tendencia }}</td>
+                              </tr>
+                              <tr>
+                                <td>Incerteza do padrão up</td>
+                                <td>{{ resultados.incerteza_padrao_up }}</td>
+                              </tr>
+                              <tr>
+                                <td>Incerteza combinada</td>
+                                <td>{{ resultados.incerteza_combinada }}</td>
+                              </tr>
+                              <tr>
+                                <td>Grau de Liberdade veff</td>
+                                <td>{{ resultados.grau_de_liberdade_veff }}</td>
+                              </tr>
+                              <tr>
+                                <td>Fator de Abrangencia 95,45%</td>
+                                <td>{{ resultados.fator_de_abrangencia9045 }}</td>
+                              </tr>
+                              <tr>
+                                <td>Incerteza expandida</td>
+                                <td>{{ resultados.incerteza_expandida }}</td>
+                              </tr>
+                              <tr>
+                                <td>Empuxo do ar</td>
+                                <td>{{ resultados.empuxo_do_ar }}</td>
+                              </tr>
+                              <tr>
+                                <td>Estabilidade do padrão</td>
+                                <td>{{ resultados.estabilidade_do_padrao }}</td>
+                              </tr>
+                              <tr>
+                                <td>Excentricidade</td>
+                                <td>{{ resultados.excentricidade }}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <form method="POST" action="{% url 'gerar_pdf' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="customer.name" value="{{ ordem_de_servico.equipamento.orcamento.solicitante.name }}">
+                            <input type="hidden" name="data_emissao" value="{{ ordem_de_servico.equipamento.orcamento.data_cadastro }}">
+                            <input type="hidden" name="data_calibracao" value="{{ selected_instrument.next_calibration }}">
+                            <input type="hidden" name="ordem_servico" value="{{ ordem_de_servico.id }}">
+                            <input type="hidden" name="customer.address" value="{{ ordem_de_servico.equipamento.orcamento.solicitante.address }}">
+                            <input type="hidden" name="customer.address_number" value="{{ ordem_de_servico.equipamento.orcamento.solicitante.address_number }}">
+                            <input type="hidden" name="customer.address_complement" value="{{ ordem_de_servico.equipamento.orcamento.solicitante.address_complement }}">
+                            <input type="hidden" name="customer.neighborhood" value="{{ ordem_de_servico.equipamento.orcamento.solicitante.neighborhood }}">
+                            <input type="hidden" name="customer.city" value="{{ ordem_de_servico.equipamento.orcamento.solicitante.city }}">
+                            <input type="hidden" name="selected_instrument.code" value="{{ selected_instrument.code }}">
+                            <input type="hidden" name="selected_instrument.serial_number" value="{{ selected_instrument.serial_number }}">
+                            <input type="hidden" name="selected_instrument.model" value="{{ modelo_instrumento }}">
+                            <input type="hidden" name="selected_instrument.tag" value="{{ selected_instrument.tag }}">
+                            <input type="hidden" name="umidade" value="{{ tipo_instrumento.condicoes_ambientais_umi }}">
+                            <input type="hidden" name="pressao" value="{{ tipo_instrumento.condicoes_ambientais_pre }}">
+                            <input type="hidden" name="temperatura" value="{{ tipo_instrumento.condicoes_ambientais_temp }}">
+                            <input type="hidden" name="dados_procedimento" value="{{ procedimentos.descricao }}">
+                            <input type="hidden" name="numeres" value="{{ numeres }}">
+                            <input type="hidden" name="resolucao" value="{{ resolucao }}">
+                            <input type="hidden" name="resultados.media" value="{{ resultados.media }}">
+                            <input type="hidden" name="resultados.desvio_padrao_amostra" value="{{ resultados.desvio_padrao_amostra }}">
+                            <input type="hidden" name="resultados.incerteza_menor" value="{{ resultados.incerteza_menor }}">
+                            <input type="hidden" name="resultados.tendencia" value="{{ resultados.tendencia }}">
+                            <input type="hidden" name="resultados.valor_ref" value="{{ resultados.valor_ref }}">
+                            <input type="hidden" name="resultados.incerteza_padrao_up" value="{{ resultados.incerteza_padrao_up }}">
+                            <input type="hidden" name="resultados.incerteza_combinada" value="{{ resultados.incerteza_combinada }}">
+                            <input type="hidden" name="resultados.grau_de_liberdade_veff" value="{{ resultados.grau_de_liberdade_veff }}">
+                            <input type="hidden" name="resultados.fator_de_abrangencia9045" value="{{ resultados.fator_de_abrangencia9045 }}">
+                            <input type="hidden" name="resultados.incerteza_expandida" value="{{ resultados.incerteza_expandida }}">
+                            <input type="hidden" name="resultados.erro" value="{{ resultados.erro }}">
+                            <input type="hidden" name="novo_padrao" value="{{ novo_padrao }}">
+                            <input type="hidden" name="novo_padrao.serie" value="{{ novo_padrao.numero_serie }}">
+                            <input type="hidden" name="novo_padrao.fabricante_id.name" value="{{ fabricante.name }}">
+                            <input type="hidden" name="novo_padrao.observacoes" value="{{ novo_padrao.observacoes }}">
+                            <input type="hidden" name="novo_padrao.prox_verificacao" value="{{ novo_padrao.prox_verificacao }}">
+                            <input type="hidden" name="identificar_proc.local" value="{{ identificar_proc.local }}">
+
+                            <button type="submit" class="btn btn-primary">Gerar Certificado</button>
+                          </form>
+                        </div> 
+                        {% endif %}
+                      </div> 
+                    </div>  
+                  </div>   
+                {% endif %}  
+            {% endif %}
+            {% if not selected_instrument or not ordem_de_servico %}
+            <div class="col-12 mt-2">
+              <button class="btn btn-gray-800 mt-2 animate-up-2" type="submit">Continuar</button>
+            </div>
+            {% endif %}
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('calculadora-form').addEventListener('submit', function(event) {
+      console.log('Evento de submit acionado!');
+        event.preventDefault(); // Impede o envio do formulário
+        
+        var numeros = [];
+        var inputs = document.querySelectorAll('input[name^="numero"]');
+        
+        inputs.forEach(function(input) {
+            var valor = parseFloat(input.value);
+            numeros.push(isNaN(valor) ? 0.0 : valor);
+        });
+        
+        // Agora, você pode enviar 'numeros' para a sua view Django usando AJAX
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/calibracao/balanca#', true); // Substitua pelo caminho correto
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+        
+        xhr.onload = function() {
+            if (xhr.status >= 200 && xhr.status < 400) {
+                // A requisição foi bem-sucedida
+                var resposta = JSON.parse(xhr.responseText);
+                console.log(resposta);
+            } else {
+                // Houve um erro na requisição
+                console.error('Erro na requisição:', xhr);
+            }
+        };
+        
+        xhr.onerror = function() {
+            console.error('Erro na requisição:', xhr);
+        };
+        
+        xhr.send(JSON.stringify({ numeros: numeros }));
+    });
+});
+
+</script>
+
+{% endblock %}

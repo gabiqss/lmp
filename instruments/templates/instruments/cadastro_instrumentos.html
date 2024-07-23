@@ -1,0 +1,206 @@
+{% extends 'layouts/base.html' %}
+{% load static %}  
+
+{% block content %} 
+<div class="d-block mb-4 mb-md-0 py-4">
+  <h4>Cadastrar instrumento</h4>
+</div>
+{% comment %} <div class="row">
+  <div class="mb-5">
+    <div class="card border-0 shadow components-section">
+      <div class="card-body">
+        {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-success alert-dismissible mt-2">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> 
+              <span class="error-message">{{ message }}</span> 
+          </div>
+          {% endfor %}
+        {% endif %}
+        <div class="row">
+          <form method="POST">
+            {% csrf_token %}
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <label for="id_customer">Selecione o cliente</label>
+                <select id="id_customer" class="form-control" name="id_customer">
+                  <option selected disabled>Cliente...</option>
+                  {% for customer in customers %}
+                    <option value="{{ customer.id }}">{{ customer.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="id_customer_sector">Selecione o setor</label>
+                <select id="id_customer_sector" class="form-control" name="id_customer_sector">
+                  <option selected disabled>Setor...</option>
+                  {% for sector in customers_sector %}
+                    <option value="{{ sector.id }}">{{ sector.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="id_code">Código</label>
+              {{ form.code }}
+            </div>
+            <div class="form-group">
+              <label for="id_serial_number">Número de série</label>
+              {{ form.serial_number }}
+            </div>
+            <div class="form-group">
+              <label for="id_tag">TAG</label>
+              {{ form.tag }}
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <label for="id_instrument_type">Tipo de instrumento</label>
+                <select id="id_instrument_type" class="form-control" name="id_instrument_type">
+                  <option selected disabled>Tipo...</option>
+                  {% for instrument in instrument_types %}
+                    <option value="{{ instrument.id }}">{{ instrument.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="id_instrument_model">Modelo</label>
+                <select id="id_instrument_model" class="form-control" name="id_instrument_model">
+                  <option selected disabled>Modelo...</option>
+                  {% for instrument_model in instrument_models %}
+                    <option value="{{ instrument_model.id }}">{{ instrument_model.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="id_supplier">Fabricante</label>
+                <select id="id_supplier" class="form-control" name="id_supplier">
+                  <option selected disabled>Fabricante...</option>
+                  {% for supplier in suppliers %}
+                    <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="id_next_calibration">Próxima Calibração</label>
+              {{ form.next_calibration }}
+            </div>
+            <div class="form-group">
+              <label for="id_calibration_frequency_months">Calibrar a cada (mês)</label>
+              {{ form.calibration_frequency_months }}
+            </div>
+            <div class="form-group">
+              <label for="id_is_active">Instrumento ativo</label>
+              {{ form.is_active }}
+            </div>
+            <div class="form-group" style="width: 100%">
+              <label for="id_description">Descrição</label>
+              {{ form.description }}
+            </div>
+            <button type="submit" class="btn btn-sm btn-primary">Salvar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> {% endcomment %}
+<div class="row">
+  <div class="mb-5">
+    <div class="card border-0 shadow components-section">
+      <div class="card-body">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-success alert-dismissible mt-2">
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> 
+            <span class="error-message">{{ message }}</span> 
+        </div>
+        {% endfor %}
+        {% endif %} 
+        <div class="row">
+          <form method="post" class="formulario">
+            {% csrf_token %}
+            {% if form.cnpj.errors %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              {% for error in form.cnpj.errors %}
+                {{ error }}
+              {% endfor %}
+            </div>
+            {% endif %}
+            <div class="row">
+              <div class="col-lg-4 col-sm-6">
+                <div class="form-group mb-4">
+                  <label for="id_customer">Cliente</label>
+                  <select id="id_customer" class="form-control" name="id_customer">
+                    <option selected disabled>Selecione o cliente...</option>
+                    {% for customer in customers %}
+                      <option value="{{ customer.id }}">{{ customer.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-4 col-sm-6">
+                <div class="form-group mb-4">
+                  <label for="id_customer_sector">Setor</label>
+                  <select id="id_customer_sector" class="form-control" name="id_customer_sector">
+                    <option selected disabled>Selecione o setor...</option>
+                    {% for sector in customers_sector %}
+                      <option value="{{ sector.id }}">{{ sector.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-4 col-sm-6">
+                <div class="form-group mb-4">
+                  <label for="id_instrument_type">Instrumento</label>
+                  <select id="id_instrument_type" class="form-control" name="id_instrument_type">
+                    <option selected disabled>Tipo...</option>
+                    {% for instrument in instrument_types %}
+                      <option value="{{ instrument.id }}">{{ instrument.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-4 col-sm-6">
+                <div class="form-group mb-4">
+                  <label for="id_instrument_model">Modelo</label>
+                  <select id="id_instrument_model" class="form-control" name="id_instrument_model">
+                    <option selected disabled>Modelo...</option>
+                    {% for instrument_model in instrument_models %}
+                      <option value="{{ instrument_model.id }}">{{ instrument_model.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-4 col-sm-6">
+                <div class="form-group mb-4">
+                  <label for="id_supplier">Fabricante</label>
+                  <select id="id_supplier" class="form-control" name="id_supplier">
+                    <option selected disabled>Fabricante...</option>
+                    {% for supplier in suppliers %}
+                      <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              {% for field in form %}
+              <div class="col-lg-4 col-sm-6">
+                <div class="form-group mb-4">
+                  <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                  {{ field }}
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            <div class="form-group d-flex justify-content-end pt-4">
+              <a class="btn btn-outline-primary mx-2" href="/instruments/instruments">Cancelar</a>
+              <button class="btn btn-primary" type="submit">Cadastrar</button>
+            </div>
+          </form> 
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %} 

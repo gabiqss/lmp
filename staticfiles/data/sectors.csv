@@ -1,0 +1,30 @@
+ID,NAME,DESCRIPTION,ID_TYPE,REMOVED,symbol,pressure,humidity,temperature,temperature_positive,pressure_positive,humidity_positive,temperature_negative,pressure_negative,humidity_negative,id_sector_send,visualize_fa,id_stock,used_workflow,identifier,id_standard_temperature,id_standard_humidity,id_standard_pressure,block_entry,uptime
+-2,[Todos - Por Ordem de Serviço],,8,1,,0.0,0.0,0.0,,,,,,,,0,1.0,1,7EIB3UFQLPGPGV7,,,,False,
+-1,[Todos - Por Setor],,8,1,,0.0,0.0,0.0,,,,,,,,0,1.0,1,CGASJHQIU862P4V,,,,False,
+1,Recebimento,,4,0,REC,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,4.0,1,1.0,1,O2TUKWLXBHGU1UU,,,,False,
+2,Expedição,,5,0,EXP,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,1,,1,QAKE14NY6LUN4P9,,,,False,
+3,Faturamento,,3,0,FAT,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,2.0,1,1.0,1,JBN1RHC2XTDHMFA,,,,False,
+4,Comercial,,2,0,COM,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,5.0,1,14.0,1,X7S13BXQQ15H5Q0,,,,False,2022-01-17 09:00:00
+5,Laboratório Interno,,1,0,LAB,0.0,55.0,20.0,2.0,0.0,5.0,2.0,0.0,5.0,3.0,1,32.0,1,G3LWYEXD0FVM7FD,2299.0,2300.0,,False,2022-01-17 09:00:00
+6,Financeiro,,3,0,Fina,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,2.0,1,30.0,1,CERA5D4QL24F72L,,,,False,2022-01-17 09:00:00
+7,Pendencias Laboratorio,,1,0,PEND LAB,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,1,1.0,1,PQWUFYB2GJ47FN9,,,,False,
+8,Pendencias Comercial,,2,0,PEND Com,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,1,1.0,1,S23ESVSSU33S2PY,,,,False,
+9,OS para Manutenção,,6,1,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,1,1.0,1,YVAREB2QM9FHHJB,,,,False,
+10,Manutenção a Executar,,6,0,MAN,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,3.0,1,14.0,1,2OK8H3WI5I3CF3S,,,,False,
+11,OSs MANUTENÇÃO FINALIZADAS,,6,1,M.FINAL,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,1,1.0,1,R32FDI1I28AR8I6,,,,False,
+12,Qualificação Térmica,,1,0,QT,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,3.0,1,14.0,1,B9FNB4HLCKN5DB5,,,,False,2022-07-12 00:00:00
+13,Treinamento,,2,0,TRE,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,1,1.0,1,06HPTBQRJ7M9XRT,,,,False,
+14,Ordem de Contrato,,1,0,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,2.0,1,,1,6H9VO2HDTP4AE7V,,,,False,2021-12-30 00:00:00
+15,NENHUM,,1,1,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,3.0,1,1.0,1,RE8241KLOOUQ2R5,,,,False,
+16,OS contrato Finalizada,,1,1,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,1,1.0,1,6JS0G8FXQ3699DJ,446.0,,,False,
+17,Pendência de Faturamento,,3,0,PEND FAT,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,2.0,1,1.0,1,3MQUQJW98Q3DRRP,,,,False,
+18,Manutenção IHENE,,6,0,MIH,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,2.0,1,,1,06HHA42J4FQSR87,,,,False,2021-12-30 00:00:00
+19,Laboratorio Externo,,1,0,LABEXT,0.0,55.0,22.0,22.0,0.0,55.0,2.0,0.0,5.0,3.0,1,32.0,1,G2WKI38UHC82657,,,,False,2022-01-17 09:00:00
+20,Avaliação de Manutenção,,6,0,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,4.0,1,1.0,1,SF5YX60FDMV7T91,,,,False,
+21,Pendências de Peças Manutenção,,6,0,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,10.0,1,1.0,1,QLV2FJ5O4UEHICP,,,,False,
+23,Pendências de Manutenção,,6,0,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,1,1.0,1,3W84EVN5YIU78YN,,,,False,
+24,Equipamento Garantia,,6,0,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,2.0,1,,1,GKTBDUDEA7SA676,,,,False,
+25,HYT,,1,1,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,2.0,1,,1,UYFAXYAM8M2215T,,,,False,
+26,Qualidade,,2,0,SGQ,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,1,,1,PFN8BH7OIU9J1N1,,,,False,
+27,Marketing,,2,0,MKT,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,1,30.0,1,FWKLTUAW2KID4RA,,,,False,2022-01-17 09:00:00
+28,IMAGEM,,6,0,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,1,,1,UOJ6G2E6GQHOVET,,,,False,2022-07-22 00:00:00

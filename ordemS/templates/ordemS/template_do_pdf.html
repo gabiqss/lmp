@@ -1,0 +1,94 @@
+{% extends 'layouts/base.html' %}
+{% load static %} 
+{% block content %}  
+<div class="d-block mb-4 mb-md-0 py-4 "> 
+  <h4>Cadastrar Ordem de Serviço</h4> 
+</div>  
+<div class="row">
+  <div class="mb-5">
+    <div class="card border-0 shadow components-section">
+      <div class="card-body">
+        {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-success alert-dismissible mt-2">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> 
+              <span class="error-message">{{ message }}</span> 
+          </div>
+          {% endfor %}
+        {% endif %}
+        {% if not selected_orcamento %}
+        <form method="get"> 
+        <div class="row justify-content-center">
+          <div class="col-12"> 
+              <div class="form-group mb-4">
+                <label for="inputState">Orcamento</label>
+                <select id="inputState" class="form-control" name="id_orcamento">  <!-- Fix the name attribute -->
+                  <option value=0 selected>Selecione o orcamento...</option>
+                  {% for orcamento in orcamentos %}
+                  <option value="{{ orcamento.id }}">{{ orcamento }}</option>
+                  {% endfor %}
+                </select>
+              </div> 
+          </div> 
+          <div class="col-12 mt-2">
+            <button class="btn btn-gray-800 mt-2 animate-up-2" type="submit">Continuar</button>
+          </div>
+        </div>
+        </form>
+        {% else %}
+          {% if not selected_equipamento %}
+          <form method="get"> 
+            <div class="row justify-content-center">
+              <div class="col-12"> 
+                  <div class="form-group mb-4">
+                    <label for="inputState">Equipamento</label>
+                    <select id="inputState" class="form-control" name="id_equipamento">  <!-- Fix the name attribute -->
+                      <option value=0 selected>Selecione o equipamento...</option>
+                      {% for equipamento in equipamentos %}
+                      <option value="{{ equipamento.id }}">{{ equipamento }}</option>
+                      {% endfor %}
+                    </select>
+                  </div> 
+              </div> 
+              <div class="col-12 mt-2">
+                <button class="btn btn-gray-800 mt-2 animate-up-2" type="submit">Continuar</button>
+              </div>
+            </div>
+            </form>
+          {% endif %}
+        {% endif %}
+        <form method="post"> 
+          <div class="row">
+            {% csrf_token %} 
+              {% if selected_equipamento %}   <!-- Change 'customer' to 'selected_customer' -->
+                <div class="row">
+                  {% for field in form %}
+                  <div class="col-lg-4 col-sm-6"> 
+                      <div class="form-group mb-4">
+                          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                          {{ field }}
+                          {% if field.errors %}
+                          <div class="alert alert-danger alert-dismissible mt-2">
+                              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                              {% for error in field.errors %}
+                              <span class="error-message">{{ error }}</span>
+                              {% endfor %}
+                          </div>
+                          {% endif %}
+                      </div>
+                      {% comment %} {% endif %} {% endcomment %}
+                  </div>
+                  {% endfor %}  
+                  <div class="form-group d-flex justify-content-end ">  
+                    <button class="btn btn-primary" target="_blank" type="submit">Cadastrar e gerar pdf</button>
+                  </div> 
+                </div>  
+              {% endif %}   
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> 
+{% endblock content %}

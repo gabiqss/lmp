@@ -1,0 +1,261 @@
+{% extends 'layouts/base.html' %}
+{% load static %} 
+{% block content %}  
+<style>
+  .card-colaborador h4{
+    text-align: center;
+    margin-top: 10px;
+    border-bottom: 1px solid rgb(0, 0, 0, 0.2);
+
+  }
+  .card-servicos{
+    margin-top: 20px;
+    
+  }
+  .card-servicos h4{
+    text-align: center;
+    margin-top: 10px;
+
+  }
+  .card-anexo{
+    margin-top: 20px;
+  }
+
+  .card-anexo h5{
+    text-align: center;
+    margin-top: 10px;
+
+  }
+  .card-anexo a, .card-anexo h6{
+    margin: 20px;
+  }
+  .dados-colaborador{
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+   
+  }
+  .dados-servicos{
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+  }
+
+
+  .foto-indisponivel , .foto-colaborador{
+    height: 250px;
+    width: 187.5px;
+
+
+    
+  }
+
+
+</style>
+<div class="d-block mb-4 mb-md-0 py-4 "> 
+  <h4>Detalhes do Colaborador</h4> 
+  
+</div>  
+<div class="row">
+  <div class="mb-5">
+    <div class="card border-0 shadow "> 
+      <div class="card-body">
+        <div class="card-colaborador card border-0 shadow ">
+          <h4>Dados do colaborador</h4><br>
+            <div class="col-lg-4 col-sm-6">
+                <div class="form-group mb-4">
+                <label for="label"></label><br>
+                {% if colaborador.foto.url and colaborador.foto %}
+                <img class="foto-colaborador" src="{{ colaborador.foto.url }}" alt="Foto do Colaborador">
+                {% else %}
+                <div class="foto-indisponivel">
+                    <img src="{% static 'img/picture-profile.png' %}" alt="">                      
+                </div>
+
+                {% endif %}
+                </div>
+            </div>          
+          <div class="dados-colaborador row">
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Nome Completo: </label><br>
+                {{ colaborador.full_name }}
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Sexo: </label><br>
+                {{ colaborador.sexo }}
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">CEP: </label><br>
+                {{ colaborador.cep }}
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Número: </label><br>
+                {{ colaborador.numero }}
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Complemento: </label><br>
+                {{ colaborador.complemento}}
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Bairro: </label><br>
+                {{ colaborador.bairro }}
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Cidade: </label><br>
+                {{ colaborador.cidade }}
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Estado: </label><br>
+                {{ colaborador.estado }}
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Celular: </label><br>
+                {{ colaborador.celular }}
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">RG: </label><br>
+                {{ colaborador.rg }}
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">CPF: </label><br>
+                {{ colaborador.cpf }}
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Habilitação: </label><br>
+                {{ colaborador.habilitacao }}
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <div class="form-group mb-4">
+                  <label for="label">PIS: </label><br>
+                  {{ colaborador.pis }}
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <div class="form-group mb-4">
+                  <label for="label">Cargo: </label><br>
+                  {{ colaborador.cargo }}
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <div class="form-group mb-4">
+                  <label for="label">Setor: </label><br>
+                  {{ colaborador.setor }}
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <div class="form-group mb-4">
+                  <label for="label">Data de Admissão: </label><br>
+                  {{ colaborador.data_admissao }}
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <div class="form-group mb-4">
+                  <label for="label">Data de Desligamento: </label><br>
+                  {{ colaborador.data_desligamento }}
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <div class="form-group mb-4">
+                  <label for="label">Remuneração: </label><br>
+                  {{ colaborador.remuneracao }}
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <div class="form-group mb-4">
+                  <label for="label">Vale Transporte: </label><br>
+                  {{ colaborador.vale_transporte }}
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <div class="form-group mb-4">
+                  <label for="label">Nome do Cônjuge: </label><br>
+                  {{ colaborador.nome_conjuge }}
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <div class="form-group mb-4">
+                  <label for="label">RG do Cônjuge: </label><br>
+                  {{ colaborador.rg_conjuge }}
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <div class="form-group mb-4">
+                  <label for="label">CPF do Cônjuge: </label><br>
+                  {{ colaborador.cpf_conjuge }}
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <div class="form-group mb-4">
+                  <label for="label">Celular do Cônjuge: </label><br>
+                  {{ colaborador.celular_conjuge }}
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <div class="form-group mb-4">
+                  <label for="label">Nome de Usuário: </label><br>
+                  {{ colaborador.username }}
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <div class="form-group mb-4">
+                  <label for="label">Email: </label><br>
+                  {{ colaborador.email }}
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <div class="form-group mb-4">
+                  <label for="label">Acessa o Sistema: </label><br>
+                  {{ colaborador.is_active }}
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <div class="form-group mb-4">
+                  <label for="label">Administrador: </label><br>
+                  {{ colaborador.is_superuser }}
+                </div>
+            </div>
+          </div>
+
+        </div>
+
+        
+        <div class="card-anexo card border-0 shadow ">
+          <h5>Anexos</h5>
+          {% if anexos %}
+          {% for anexos in anexos %}
+          <a href="{{ anexos.anexo.url }}" target="_blank">{{ anexos.anexo }}</a>	
+          
+          {% endfor %}
+          {% else %}
+          <h6>Anexo indisponível</h6><br>       
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div> 
+{% endblock content %}

@@ -1,0 +1,192 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PDF do Formulário</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif; /* Defina a fonte desejada */
+        }
+
+        .pagina {
+            width: 210mm; /* Largura do papel A4 */
+            height: 297mm; /* Altura do papel A4 */
+            margin: 20mm; /* Margens de 20mm em todos os lados */
+            position: fixed;
+            background-color: white;
+        }
+
+        header {
+            position: fixed;
+            left: 0;
+            right: 0;
+            color: white;
+            text-align: center;
+        }
+
+        .imagem-cabecalho, .imagem-rodape {
+            width: 100%;
+            height: auto;
+        }
+
+        footer {
+            position: fixed;
+            left: 0;
+            color: white;
+            text-align: center;
+            right: 0;
+        }
+
+
+        .imagem-rodape {
+            position: fixed;
+            height: auto;
+            
+        }
+
+        /* Restante do seu estilo permanece o mesmo */
+
+        .formulario-dados1 {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .formulario-dados1 p {
+            margin: 15px;
+            padding: 0;
+            width: 20%;
+        }
+
+        .formulario-dados1 label {
+            font-weight: bold;
+        }
+
+        .formulario-dados {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .formulario-dados p {
+            margin: 10px 0;
+        }
+
+        .formulario-dados label {
+            font-weight: bold;
+        }
+
+        .campo-adicional {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="pagina">
+    <header>
+        <img src="static/img/cabecalho.png" alt="" class="imagem-cabecalho"/>  
+        <!-- Outro conteúdo do cabeçalho -->
+    </header>
+    
+    <h4>Dados da Ordem:</h4>
+
+    <div class="formulario-dados1">
+        <p>
+            <label>Razão Social:</label>
+            {{ dados_formulario.razao_social }}
+        </p>
+        <p>
+            <label>Contato:</label>
+            {{ dados_formulario.contato }}
+        </p>
+        <p>
+            <label>Endereço:</label>
+            {{ dados_formulario.endereco }}
+        </p>
+        <p>
+            <label>Bairro:</label>
+            {{ dados_formulario.bairro }}
+        </p>
+        <p>
+            <label>Fone:</label>
+            {{ dados_formulario.fone }}
+        </p>
+        <p>
+            <label>CNPJ:</label>
+            {{ dados_formulario.cnpj }}
+        </p>
+        <p>
+            <label>Data de Entrada:</label>
+            {{ dados_formulario.data_entrada|date:"d/m/Y" }}
+        </p>
+        <p>
+            <label>Saída Prevista:</label>
+            {{ dados_formulario.saida_prevista|date:"d/m/Y" }}
+        </p>
+        <p>
+            <label>Contrato:</label>
+            {{ dados_formulario.contrato }}
+        </p>
+        <p>
+            <label>Data do Chamado:</label>
+            {{ dados_formulario.data_chamado|date:"d/m/Y" }}
+        </p>
+        <p>
+            <label>Data do Atendimento:</label>
+            {{ dados_formulario.data_atendimento|date:"d/m/Y" }}
+        </p>
+        <p>
+            <label>CEP:</label>
+            {{ dados_formulario.cep }}
+        </p>
+        <p>
+            <label>Cidade:</label>
+            {{ dados_formulario.cidade }}
+        </p>
+        <p>
+            <label>Fax:</label>
+            {{ dados_formulario.fax }}
+        </p>
+        <p>
+            <label>Nota Fiscal:</label>
+            {{ dados_formulario.nota_fiscal }}
+        </p>
+        <p>
+            <label>Tipo de Envio:</label>
+            {{ dados_formulario.tipo_envio }}
+        </p>
+        <p>
+            <label>Embalagem:</label>
+            {{ dados_formulario.embalagem }}
+        </p>
+    </div>
+
+    <div class="formulario-dados">
+        <p>
+            <label>Informações dos Instrumentos:</label>
+            <br>
+            {{ dados_formulario.info_instrumentos }}
+        </p>
+    </div>
+
+    <div class="formulario-dados">
+        <p>
+            <label>Observações:</label>
+            <br>
+            {{ dados_formulario.observacoes }}
+        </p>
+    </div>
+
+    <footer>
+        <!-- Outro conteúdo do rodapé -->
+        <img src="static/img/rodape.png" alt="" class="imagem-rodape"/>
+    </footer>
+    <div style="height: 50px;"></div>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,242 @@
+{% extends 'layouts/base.html' %}
+{% load static %} 
+{% block content %}  
+<style>
+  .card-solicitante h4{
+    text-align: center;
+    margin-top: 10px;
+
+  }
+  .card-servicos{
+    margin-top: 20px;
+    
+  }
+  .card-servicos h4{
+    text-align: center;
+    margin-top: 10px;
+
+  }
+  .card-anexo{
+    margin-top: 20px;
+  }
+
+  .card-anexo h5{
+    text-align: center;
+    margin-top: 10px;
+
+  }
+  .card-anexo a, .card-anexo h6{
+    margin: 20px;
+  }
+  .dados-solicitante{
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+  }
+  .dados-servicos{
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+  }
+
+</style>
+<div class="d-block mb-4 mb-md-0 py-4 "> 
+  <h4>Detalhes do orçamento</h4> 
+  
+</div>  
+<div class="row">
+  <div class="mb-5">
+    <div class="card border-0 shadow "> 
+      <div class="card-body">
+        <div class="card-solicitante card border-0 shadow ">
+          <h4>Dados do solicitante</h4><br>
+          <div class="dados-solicitante row">
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Solicitante: </label><br>
+                {{ orcamento.solicitante }}
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Contato: </label><br>
+                {{ orcamento.contato }}
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Data de cadastro: </label><br>
+                {{ orcamento.data_cadastro }}
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Data de atualização: </label><br>
+                {{ orcamento.data_atualizacao }}
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Validade da Proposta: </label><br>
+                {{ orcamento.validade_proposta }}
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Observação: </label><br>
+                {{ orcamento.observacoes }}
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Local: </label><br>
+                {{ orcamento.local }}
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Forma de Pagamento: </label><br>
+                {{ orcamento.forma_pagamento }}
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Condição de Pagamento: </label><br>
+                {{ orcamento.condicao_pagamento }}
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Tipo de Orçamento: </label><br>
+                {{ orcamento.tipo_orcamento }}
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Forma de Solicitação: </label><br>
+                {{ orcamento.forma_solicitacao }}
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Valor de Orçamento: </label><br>
+                {{ total }}
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Status: </label><br>
+                {{ orcamento.status }}
+              </div>
+            </div>
+            <!-- <h5>Solicitante</h5>
+            <h6>{{ orcamento.solicitante }}</h6><br>
+            <h5>Contato</h5>
+            <h6>{{ orcamento.contato }}</h6><br> -->
+            <!-- <h5>Data de cadastro</h5>
+            <h6>{{ orcamento.data_cadastro }}</h6><br>
+            <h5>Data de atualização</h5>
+            <h6>{{ orcamento.data_atualizacao }}</h6><br> -->
+            <!-- <h5>Validade da Proposta</h5>
+            <h6>{{ orcamento.validade_proposta }}</h6><br>
+            <h5>Observação</h5>
+            <h6>{{ orcamento.observacoes }}</h6><br> -->
+            <!-- <h5>Local</h5>
+            <h6>{{ orcamento.local }}</h6><br>
+            <h5>Forma de Pagamento</h5>
+            <h6>{{orcamento.forma_pagamento}}</h6><br> -->
+            <!-- <h5>Condição de Pagamento</h5>
+            <h6>{{ orcamento.condicao_pagamento }}</h6><br>
+            <h5>Tipo de Orçamento</h5>
+            <h6>{{orcamento.tipo_orcamento}}</h6><br> -->
+            <!-- <h5>Forma de Solicitação</h5>
+            <h6>{{orcamento.forma_solicitacao}}</h6><br>
+            <h5>Valor de Orçamento</h5>
+            <h6>{{ total  }}</h6><br>
+            <h5>Status</h5>
+            <h6>{{orcamento.status}}</h6><br>             -->
+          </div>
+
+        </div>
+
+        <div class="card-servicos card border-0 shadow ">
+          <h4>Dados de serviço</h4><br>
+          <div class="dados-servicos row">
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Código: </label><br>
+                <!-- {{ orcamento.solicitante }} -->
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Área de acreditação: </label><br>
+                <!-- {{ orcamento.contato }} -->
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Especificação: </label><br>
+                <!-- {{ orcamento.data_cadastro }} -->
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Tipo de serviço: </label><br>
+                <!-- {{ orcamento.data_atualizacao }} -->
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Tipo de Item: </label><br>
+                <!-- {{ orcamento.validade_proposta }} -->
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Local: </label><br>
+                <!-- {{ orcamento.observacoes }} -->
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Descrição: </label><br>
+                <!-- {{ orcamento.local }} -->
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Pontos: </label><br>
+                <!-- {{ orcamento.forma_pagamento }} -->
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Valor do Ponto Adicional: </label><br>
+                <!-- {{ orcamento.condicao_pagamento }} -->
+              </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+              <div class="form-group mb-4">
+                <label for="label">Valor: </label><br>
+                <!-- {{ orcamento.tipo_orcamento }} -->
+              </div>
+            </div>
+          </div>       
+        </div>
+        <div class="card-anexo card border-0 shadow ">
+          <h5>Anexos</h5>
+          {% if anexos %}
+          {% for anexos in anexos %}
+          <a href="{{ anexos.anexo.url }}" target="_blank">{{ anexos.anexo }}</a>	
+          
+          {% endfor %}
+          {% else %}
+          <h6>Anexo indisponível</h6><br>       
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div> 
+{% endblock content %}

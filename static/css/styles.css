@@ -1,0 +1,193 @@
+button {
+    margin-left: 10px;
+  }
+  
+  
+  .containerr {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .navbar-nav {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .btn.btn-primary {
+    background-color: #333;
+  }
+  
+  .formulario {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .formulario label {
+    grid-column: 1;
+  }
+  
+  .formulario input[type="text"],
+  .formulario textarea {
+    grid-column: 2;
+    width: 100%;
+  }
+  
+  .modal-dialog {
+    max-width: 800px;
+    border-radius: 10px;
+  }
+  
+  .botao-cinza{
+    background-color: #333;
+  }
+  
+  .botao-cinza:hover {
+    background-color: #ccc;
+  }
+  
+  .btn.btn-primary:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  
+  .modal-header .close {
+    color: #fff;
+  }
+  
+  .modal-body.formulario-as-p label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1.2em;
+    color: #333;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  }
+  
+  #meu-modal-label.modal-title {
+    color: #fff;
+    padding: 20px;
+  }
+  
+  .modal-header{
+    background-color: #333;
+  }
+  
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .pagination-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .pagination-item {
+    margin: 0 5px;
+  }
+  
+  .fas.fa-trash {
+    color: #db1e47;
+    cursor: pointer;
+    margin: 5px;
+    font-size: 20px;
+    float: right;
+  }
+  
+  .fas.fa-edit {
+    color: #13c43f;
+    cursor: pointer;
+    margin: 5px;
+    font-size: 20px;
+    float: right;
+  }
+  
+  
+  
+  
+   
+  
+  
+  /* Estilos para as imagens */
+  
+  .imagem-cabecalho {
+    width: 100%; /* Altere o valor para definir a largura desejada */
+    height: auto; /* Mantém a proporção original da imagem */
+    margin: 0; /* Removido o valor "px" desnecessário */
+  }
+  
+  .imagem-rodape {
+    width: 100%; /* Altere o valor para definir a largura desejada */
+    height: auto; /* Mantém a proporção original da imagem */
+    margin: 10px; /* Altere os valores para definir a margem desejada */
+  }
+  
+  /* Estilos para o formulário */
+  
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 100px; /* Espaçamento inferior para deixar espaço para o botão */
+  }
+  
+  .form-field {
+    flex-basis: calc(25% - 10px); /* Distribui 4 campos por linha com margens de 10px */
+    margin-bottom: 10px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    margin-left: 10px; /* Adicione o valor desejado aqui */;
+  }
+  
+  .my-form-inputs {
+    width: 90%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-left: 10px; /* Adicione o valor desejado aqui */
+  }
+  
+  .my-form-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px; /* Adicione o valor desejado aqui */
+  }
+  
+  .my-form-button:hover {
+    background-color: #0069d9;
+  }
+  
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Definir a altura mínima para ocupar toda a altura da viewport */
+    margin: 0;
+    padding: 0;
+  }
+  
+  header {
+    flex-shrink: 0; /* Evitar que o cabeçalho seja redimensionado */
+  }
+  
+  main {
+    flex-grow: 1; /* Fazer o conteúdo principal ocupar o espaço restante */
+  }
+  
+  footer {
+    flex-shrink: 0; /* Evitar que o rodapé seja redimensionado */
+  }
+  

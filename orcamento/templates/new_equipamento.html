@@ -1,0 +1,54 @@
+{% extends 'layouts/base.html' %}
+{% load static %} 
+{% block content %}  
+<div class="d-block mb-4 mb-md-0 py-4 "> 
+  <h4>Cadastrar Equipamento</h4> 
+  
+</div>  
+<div class="row">
+  <div class="mb-5">
+    <div class="card border-0 shadow "> 
+      <div class="card-body">
+        <form method="post"> 
+          <div class="row">
+            {% csrf_token %} 
+                <div class="row">
+                  {% for field in form %}
+                  <div class="col-lg-4 col-sm-6"> 
+                    {% if field.name == '123' %}
+                    <div class="form-group mb-4">
+                      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                      <select id="{{ field.id_for_label }}" class="form-control" name="{{ field.name }}">
+                        {% for peca in peca_cliente %}
+                          <option value="{{ peca }}">{{ peca }}</option>
+                        {% endfor %}
+                      </select>
+                    </div> 
+                    {% else %}
+                    <div class="form-group mb-4">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                          {{ field }}
+                        {% if field.errors %}
+                        <div class="alert alert-danger alert-dismissible mt-2">
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            {% for error in field.errors %}
+                            <span class="error-message">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                  </div> 
+                  {% endfor %}   
+                  <div class="form-group d-flex justify-content-end ">  
+                    <button class="btn btn-primary" type="submit">Cadastrar</button>
+                  </div> 
+                </div>    
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> 
+{% endblock content %}

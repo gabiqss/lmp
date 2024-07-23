@@ -1,0 +1,291 @@
+{% extends 'layouts/base.html' %}
+{% load static %} 
+{% block content %} 
+<div class="d-block mb-4 mb-md-0 py-4 "> 
+    <h4>Cadastrar Fornecedor</h4> 
+</div>
+
+<div class="row">
+    
+    <div class="mb-5">
+        <a href="{% url 'cadastrar_fornecedor_cpf' %}" class="btn btn-primary" style="margin-bottom: 20px;">Cadastrar por CPF</a>
+      <div class="card border-0 shadow components-section">
+        <div class="card-body">
+          {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-success alert-dismissible mt-2">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> 
+              <span class="error-message">{{ message }}</span> 
+          </div>
+          {% endfor %}
+          {% endif %} 
+          <div class="row">
+            <form method="post" class="formulario" enctype="multipart/form-data">
+              {% csrf_token %}
+              {% if form.cnpj.errors %}
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                {% for error in form.cnpj.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+              {% endif %}
+              <div class="row">
+                <h4 style="margin-bottom: 50px; text-align: center;">Dados do Fornecedor</h4><br>
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+                    {{ form.name }}
+                  </div>
+                </div>        
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.cnpj.id_for_label }}">{{ form.cnpj.label }}</label>
+                    {{ form.cnpj }}
+                  </div>
+                </div> 
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+                    {{ form.phone }}
+                  </div>
+                </div>          
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                    {{ form.email }}
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.corporate_name.id_for_label }}">{{ form.corporate_name.label }}</label>
+                    {{ form.corporate_name }}
+                  </div>
+                </div> 
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.municipal_registration.id_for_label }}">{{ form.municipal_registration.label }}</label>
+                    {{ form.municipal_registration }}
+                  </div>
+                </div>                     
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.state_registration.id_for_label }}">{{ form.state_registration.label }}</label>
+                    {{ form.state_registration }}
+                  </div>
+                </div>     
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.address.id_for_label }}">{{ form.address.label }}</label>
+                    {{ form.address }}
+                  </div>
+                </div>     
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.city.id_for_label }}">{{ form.city.label }}</label>
+                    {{ form.city }}
+                  </div>
+                </div>     
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.uf.id_for_label }}">{{ form.uf.label }}</label>
+                    {{ form.uf }}
+                  </div>
+                </div>     
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.cep.id_for_label }}">{{ form.cep.label }}</label>
+                    {{ form.cep }}
+                  </div>
+                </div>     
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+                    {{ form.description }}
+                  </div>
+                </div>     
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.fax.id_for_label }}">{{ form.fax.label }}</label>
+                    {{ form.fax }}
+                  </div>
+                </div>     
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.neighborhood.id_for_label }}">{{ form.neighborhood.label }}</label>
+                    {{ form.neighborhood }}
+                  </div>
+                </div> 
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.date_of_fundation.id_for_label }}">{{ form.date_of_fundation.label }}</label>
+                    {{ form.date_of_fundation }}
+                  </div>
+                </div>         
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.web_site.id_for_label }}">{{ form.web_site.label }}</label>
+                    {{ form.web_site }}
+                  </div>
+                </div>     
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.id_market_segment.id_for_label }}">{{ form.id_market_segment.label }}</label>
+                    {{ form.id_market_segment }}
+                  </div>
+                </div>     
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.id_size.id_for_label }}">{{ form.id_size.label }}</label>
+                    {{ form.id_size }}
+                  </div>
+                </div>     
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.address_number.id_for_label }}">{{ form.address_number.label }}</label>
+                    {{ form.address_number }}
+                  </div>
+                </div>     
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.address_complement.id_for_label }}">{{ form.address_complement.label }}</label>
+                    {{ form.address_complement }}
+                  </div>
+                </div>     
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.payment_day.id_for_label }}">{{ form.payment_day.label }}</label>
+                    {{ form.payment_day }}
+                  </div>
+                </div>     
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.is_requestor_in_field.id_for_label }}">{{ form.is_requestor_in_field.label }}</label>
+                    {{ form.is_requestor_in_field }}
+                  </div>
+                </div>   
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.payment_venc.id_for_label }}">{{ form.payment_venc.label }}</label>
+                    {{ form.payment_venc }}
+                  </div>
+                </div>   
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.company_responsible.id_for_label }}">{{ form.company_responsible.label }}</label>
+                    {{ form.company_responsible }}
+                  </div>
+                </div>  
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.credit_or_debit_card.id_for_label }}">{{ form.credit_or_debit_card.label }}</label>
+                    {{ form.credit_or_debit_card }}
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.tipo_cliente.id_for_label }}">{{ form.tipo_cliente.label }}</label>
+                    {{ form.tipo_cliente }}
+                  </div>
+                </div>      
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                      <label for="label">Anexos:</label><br>
+                      <div id="file-container">
+                          {{ form_anexo.anexo }}
+                      </div>
+                      <button type="button" id="add-file" class="btn btn-primary"><i class="fas fa-plus"></i> Adicionar Anexo</button>
+                  </div>
+              </div>
+              <div class="row">
+                <h4 style="margin-bottom: 50px; margin-top: 50px;padding: 20px; text-align: center; border-top: 1px solid rgb(0, 0, 0, 0.2);">Avaliação do Fornecedor</h4><br>
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.retorna_rapidamente.id_for_label }}">{{ form.retorna_rapidamente.label }}</label>
+                    {{ form.retorna_rapidamente }}
+                  </div>
+                </div>        
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.data_retorna_rapidamente.id_for_label }}">{{ form.data_retorna_rapidamente.label }}</label>
+                    {{ form.data_retorna_rapidamente }}
+                  </div>
+                </div> 
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.soluciona_problemas.id_for_label }}">{{ form.soluciona_problemas.label }}</label>
+                    {{ form.soluciona_problemas }}
+                  </div>
+                </div>          
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.data_soluciona_problemas.id_for_label }}">{{ form.data_soluciona_problemas.label }}</label>
+                    {{ form.data_soluciona_problemas }}
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.produto_fornecidos.id_for_label }}">{{ form.produto_fornecidos.label }}</label>
+                    {{ form.produto_fornecidos }}
+                  </div>
+                </div> 
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.fornecedor_acreditado.id_for_label }}">{{ form.fornecedor_acreditado.label }}</label>
+                    {{ form.fornecedor_acreditado }}
+                  </div>
+                </div>                     
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.fornecedor_cnpj_ativo.id_for_label }}">{{ form.fornecedor_cnpj_ativo.label }}</label>
+                    {{ form.fornecedor_cnpj_ativo }}
+                  </div>
+                </div>     
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.credibilidade.id_for_label }}">{{ form.credibilidade.label }}</label>
+                    {{ form.credibilidade }}
+                  </div>
+                </div>     
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.custo_beneficio.id_for_label }}">{{ form.custo_beneficio.label }}</label>
+                    {{ form.custo_beneficio }}
+                  </div>
+                </div>     
+                <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4">
+                    <label for="{{ form.desempenha_qualidade.id_for_label }}">{{ form.desempenha_qualidade.label }}</label>
+                    {{ form.desempenha_qualidade }}
+                  </div>
+                </div>     
+              </div>
+              </div>
+              <div class="form-group">
+                    <a class="btn btn-outline-primary mx-2" href="/fornecedores">Cancelar</a>
+                    <button class="btn btn-primary" type="submit" name="action" value="save">Cadastrar</button>
+                    {% if mensagem %}
+                      <div class="alert alert-success">
+                          {{ mensagem }}
+                      </div>
+                    {% endif %}
+                </div> 
+            </form> 
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.4.slim.min.js" integrity="sha384-m/qXs6Ta64ootdh3VSJsg0sw+LJ/eUdVto+qns9kekovxhjr8qMK/9UvaO0iXgg7" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+<script>
+  $(document).ready(function(){
+      // Adicionar campo de arquivo
+      $("#add-file").click(function(){
+          var fileInput = '{{ form_anexo.anexo }}';
+          $("#file-container").append(fileInput);
+      });
+  });
+</script>
+{% endblock %}

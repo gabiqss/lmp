@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+
+{% block content %}
+{% if request.user.is_authenticated %}
+<!-- Botão que abre o modal -->
+<a href="{% url 'consultar_empresa' %}" class="btn btn-primary botao-cinza">Cadastrar Clientes</a>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">cliente</th>
+      <th scope="col">cnpj</th>
+      <th scope="col">telefone</th>
+      <th scope="col">email</th>
+      <th scope="col">endereço</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for i in page_obj %}
+        <tr>
+          <td><span><a href="/cliente/{{i.id}}">{{i.name}}</a></span></td>
+          <td>{{i.cnpj}}</td>
+          <td>{{i.phone}}</td>
+          <td>{{i.email}}</td>
+          <td>{{i.address}}</td>
+        </tr>
+    {% endfor %}
+
+  </tbody>
+</table>
+<div class="pagination">
+    <ul class="pagination-list">
+      {% if page_obj.has_previous %}
+        <li class="pagination-item">
+          <a class="pagination-link" href="?page=1">&laquo; Primeiro</a>
+        </li>
+        <li class="pagination-item">
+          <a class="pagination-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+        </li>
+      {% endif %}
+      {% if page_obj.has_next %}
+        <li class="pagination-item">
+          <a class="pagination-link" href="?page={{ page_obj.next_page_number }}">Próximo</a>
+        </li>
+        <li class="pagination-item">
+          <a class="pagination-link" href="?page={{ page_obj.paginator.num_pages }}">&raquo; Último</a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,251 @@
+{% load static %}
+
+<nav id="sidebarMenu" class="sidebar d-lg-block bg-gray-800 text-white collapse" data-simplebar>
+  <div class="sidebar-inner px-4 pt-3">
+    <div class="user-card d-flex d-md-none align-items-center justify-content-between justify-content-md-center pb-4">
+      <div class="d-flex align-items-center">
+        <div class="avatar-lg me-4">
+          <img src="{% static 'img/picture-profile.png' %}" class="card-img-top rounded-circle border-white"
+            alt="Bonnie Green">
+        </div>
+        <div class="d-block"> 
+          <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+          <button type="submit" class="btn btn-secondary btn-sm d-inline-flex align-items-center">
+            <svg class="icon icon-xxs me-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+            Sign Out
+          </button>
+        </form>
+        </div>
+      </div>
+      <div class="collapse-close d-md-none">
+        <a href="#sidebarMenu" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu"
+          aria-expanded="true" aria-label="Toggle navigation">
+          <svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clip-rule="evenodd"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <ul class="nav flex-column pt-3 pt-md-0">
+      {% if request.user.is_authenticated %}
+
+      <li class="nav-item">
+        <a href="/" class="nav-link d-flex align-items-center px-4">
+          <img src="{% static 'img/logo-lemp.png' %}" height="45" width="160" alt="Lempe">
+        </a>
+      </li> 
+
+      {% else %}
+      
+      <li class="nav-item">
+        <a href="#" class="nav-link d-flex align-items-center px-4">
+          <img src="{% static 'img/logo-lemp.png' %}" height="45" width="160" alt="Lempe">
+        </a>
+      </li> 
+
+      {% endif %}
+      {% if request.user.is_authenticated %}
+      <li class="nav-item">
+        <span class="nav-link  collapsed  d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+          data-bs-target="#submenu2-pages">
+          <span>
+            <span class="sidebar-icon">
+              <i class="fas fa-user"></i>
+            </span>
+            <span class="sidebar-text">Administrativo</span>
+          </span>
+          <span class="link-arrow">
+            <svg class="icon icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
+                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                clip-rule="evenodd"></path>
+            </svg>
+          </span>
+        </span>
+        <div class="multi-level collapse " role="list" id="submenu2-pages" aria-expanded="false">
+          <ul class="flex-column nav">
+            <li class="nav-item">
+              <a class="nav-link" href="/clientes"> 
+                <span class="sidebar-text">Clientes</span> 
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'colaboradores' %}"> 
+                <span class="sidebar-text">Colaboradores</span>
+              </a>
+            </li> 
+            <li class="nav-item ">
+              <a class="nav-link" href="{% url 'fornecedores' %}"> 
+                <span class="sidebar-text">Fornecedores</span> 
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href=""> 
+                <span class="sidebar-text">Frota</span>
+              </a>
+            </li> 
+          </ul>
+        </div>
+      </li>
+      
+      <li class="nav-item">
+        <span class="nav-link  collapsed  d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+          data-bs-target="#submenu4-pages">
+          <span>
+            <span class="sidebar-icon">
+              <i class="fas fa-chart-line"></i>
+            </span>
+            <span class="sidebar-text">Comercial</span>
+          </span>
+          <span class="link-arrow">
+            <svg class="icon icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
+                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                clip-rule="evenodd"></path>
+            </svg>
+          </span>
+        </span>
+        <div class="multi-level collapse " role="list" id="submenu4-pages" aria-expanded="false">
+          <ul class="flex-column nav">
+            <!-- Adicione aqui os itens específicos da área comercial -->
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'view-orcamento' %}"> 
+                <span class="sidebar-text">Orçamento</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <span class="nav-link  collapsed  d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+          data-bs-target="#submenu5-pages">
+          <span>
+            <span class="sidebar-icon">
+              <i class="fas fa-wallet"></i>
+            </span>
+            <span class="sidebar-text">Financeiro</span>
+          </span>
+          <span class="link-arrow">
+            <svg class="icon icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
+                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                clip-rule="evenodd"></path>
+            </svg>
+          </span>
+        </span>
+        <div class="multi-level collapse " role="list" id="submenu5-pages" aria-expanded="false">
+          <ul class="flex-column nav">
+            <!-- Adicione aqui os itens específicos da área financeira -->
+            <li class="nav-item">
+              <a class="nav-link" href=""> 
+                <span class="sidebar-text">Contas a pagar</span>
+              </a>
+            </li> 
+            <li class="nav-item">
+              <a class="nav-link" href=""> 
+                <span class="sidebar-text">Contas a receber</span>
+              </a>
+            </li> 
+            <li class="nav-item">
+              <a class="nav-link" href=""> 
+                <span class="sidebar-text">Pedidos de compras</span>
+              </a>
+            </li> 
+            <li class="nav-item">
+              <a class="nav-link" href=""> 
+                <span class="sidebar-text">Emissão de notas</span>
+              </a>
+            </li> 
+          </ul>
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <span class="nav-link  collapsed  d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+          data-bs-target="#submenu3-pages">
+          <span>
+            <span class="sidebar-icon">
+              <i class="fas fa-wrench"></i>
+            </span>
+            <span class="sidebar-text">Laboratório</span>
+          </span>
+          <span class="link-arrow">
+            <svg class="icon icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
+                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                clip-rule="evenodd"></path>
+            </svg>
+          </span>
+        </span>
+        <div class="multi-level collapse " role="list" id="submenu3-pages" aria-expanded="false">
+          <ul class="flex-column nav">
+            <li class="nav-item"> 
+              <a class="nav-link" href="{% url 'criar_procedimento' %}"> 
+                <span class="sidebar-text">Procedimentos</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'instrumentos' %}"> 
+                <span class="sidebar-text">Instrumentos</span>
+              </a>
+            </li>
+            <li class="nav-item"> 
+              <a class="nav-link" href="{% url 'list_procedimentoEletr' %}"> 
+                <span class="sidebar-text">Procedimentos <br/>eletrônicos</span>
+              </a>
+            </li>
+            <li class="nav-item"> 
+              <a class="nav-link" href="{% url 'index_padrao' %}"> 
+                <span class="sidebar-text">Padrões</span>
+              </a>
+            </li>
+            <li class="nav-item"> 
+              <a class="nav-link" href="{% url 'checklist_list' %}"> 
+                <span class="sidebar-text">Checklists</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'calibracao' %}"> 
+                <span class="sidebar-text">Calibração</span> 
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Use JavaScript para adicionar a classe 'show' aos itens de submenu específicos
+      const adminSubMenu = document.getElementById('submenu2-pages');
+      const labSubMenu = document.getElementById('submenu3-pages');
+      const comercialSubMenu = document.getElementById('submenu4-pages');
+      const financeiroSubMenu = document.getElementById('submenu5-pages');
+  
+      if (adminSubMenu) {
+        adminSubMenu.classList.add('show');
+      }
+  
+      if (labSubMenu) {
+        labSubMenu.classList.add('show');
+      }
+  
+      if (comercialSubMenu) {
+        comercialSubMenu.classList.add('show');
+      }
+  
+      if (financeiroSubMenu) {
+        financeiroSubMenu.classList.add('show');
+      }
+    });
+  </script>
+</nav>

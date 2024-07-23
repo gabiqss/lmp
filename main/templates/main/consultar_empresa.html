@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+  <h1 class="mb-4">Consultar empresa</h1>
+  <form method="post" class="formulario">
+    {% csrf_token %}
+    <div class="form-group">
+      {{ form.as_p }}
+      <button class="btn btn-primary mt-3" type="submit" name="action" value="search">Consultar</button>
+      <button class="btn btn-primary mt-3" type="submit" name="action" value="save">Salvar</button>
+    </div>
+  </form>
+{% endblock %}
+

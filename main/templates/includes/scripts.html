@@ -1,0 +1,94 @@
+{% load static %}
+
+<!-- Core -->
+<script src="{% static 'vendor/@popperjs/core/dist/umd/popper.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+
+<!-- Vendor JS -->
+<script src="{% static 'vendor/onscreen/dist/on-screen.umd.min.js' %}"></script>
+
+<!-- Slider -->
+<script src="{% static 'vendor/nouislider/dist/nouislider.min.js' %}"></script>
+
+<!-- Smooth scroll -->
+<script src="{% static 'vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js' %}"></script>
+
+<!-- Charts -->
+<script src="{% static 'vendor/chartist/dist/chartist.min.js' %}"></script>
+<script src="{% static 'vendor/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js' %}"></script>
+
+<!-- Datepicker -->
+<script src="{% static 'vendor/vanillajs-datepicker/dist/js/datepicker.min.js' %}"></script>
+
+<!-- Sweet Alerts 2 -->
+<script src="{% static 'vendor/sweetalert2/dist/sweetalert2.all.min.js' %}"></script>
+
+<!-- Moment JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
+
+<!-- Vanilla JS Datepicker -->
+<script src="{% static 'vendor/vanillajs-datepicker/dist/js/datepicker.min.js' %}"></script>
+
+<!-- Notyf -->
+<script src="{% static 'vendor/notyf/notyf.min.js' %}"></script>
+
+<!-- Simplebar -->
+<script src="{% static 'vendor/simplebar/dist/simplebar.min.js' %}"></script>
+
+<!-- Github buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<!-- Volt JS -->
+<script src="{% static 'assets/js/volt.js' %}"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+      $('.phone-input').inputmask('(99) 9 9999-9999');
+      $('.tel-input').inputmask('(99) 9999-9999');
+      $('.rg-input').inputmask('99.999.999-9'); 
+      $('.cpf-input').inputmask('999.999.999-99');
+      $('.cnpj-input').inputmask('99.999.999/9999-99');
+      $('.cep-input').inputmask('99999-999'); 
+  });
+</script> 
+<script>
+  $(document).ready(function() {
+    $('#searchButton').click(function() {
+      var searchTerm = $('#searchInput').val();
+      var url = window.location.href.split('?')[0];  // Remove todos os parâmetros de pesquisa existentes
+      url += '?search=' + encodeURIComponent(searchTerm);
+      window.location.href = url;
+    });
+  });
+  var tableRows = $('table tbody tr');
+  var noResultsMessage = $('#noResultsMessage');
+
+  if (tableRows.length === 0) {
+    noResultsMessage.show();
+  } else {
+    noResultsMessage.hide();
+  }
+</script>
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.slim.min.js" integrity="sha384-ZvpUoIexc+6v9CitFzL4doizoJFBtrOTqLaa8abtY8nehHTt4FL6lPD0i94eZkL4" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-hnaC2Fl9RHvbKk4cl6o9ek9HQ12VXIxPDA+ZL8hi8BU9yKuXq5SlX26P/DW6j3p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-qI5fW/vYDcNYV9MKT5z9e9PRfvl/J6ovND5z5lbybACSSHoECSHb1gJqUOe17F5g" crossorigin="anonymous"></script>
+
+<!-- Inclua o CSS do Select2 -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/css/select2.min.css" rel="stylesheet" />
+
+<!-- Inclua o JS do jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Inclua o JS do Select2 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
+
+<script>
+  function goBack() {
+      window.history.back();
+  }
+</script>

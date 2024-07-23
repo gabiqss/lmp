@@ -1,0 +1,172 @@
+{% extends 'layouts/base.html' %}
+{% load static %} 
+{% block content %}  
+<div class="d-block mb-4 mb-md-0 py-4 "> 
+    <h4>Padrões</h4> 
+</div>
+<div class="row">
+    <!-- Grandezas -->
+    <div class="col-12 col-sm-12 col-xl-4 mb-4">
+        <div class="card border-0 shadow">
+            <div class="card-body">
+                <a href="{% url 'listgrandeza' %}" >
+                    <div class="row d-block d-xl-flex align-items-center">
+                        <div class="col-12 col-xl-5 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center">
+                        <div class="icon-shape rounded me-4 me-sm-0" style="color: #40949C; background-color: rgba(64, 148, 156, 0.3);">
+                            <i class="fas fa-box fa-2x"></i>
+                        </div> 
+                        </div>
+                        <div class="col-12 col-xl-7 px-xl-0">
+                            <h5 class="card-title">Grandezas</h5>
+                            <p class="card-text">Lorem Ipsum is simply dummy text of the printing.</p> 
+                        </div>
+                    </div> 
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- Unidade de medidas -->
+    <div class="col-12 col-sm-12 col-xl-4 mb-4">
+        <div class="card border-0 shadow">
+            <div class="card-body">
+                <a href="{% url 'listunidadeMedida' %}" >
+                    <div class="row d-block d-xl-flex align-items-center">
+                        <div class="col-12 col-xl-5 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center">
+                        <div class="icon-shape rounded me-4 me-sm-0" style="color: #40949C; background-color: rgba(64, 148, 156, 0.3);">
+                            <i class="fas fa-box fa-2x"></i>
+                        </div> 
+                        </div>
+                        <div class="col-12 col-xl-7 px-xl-0">
+                            <h5 class="card-title">Unidade de medidas</h5>
+                            <p class="card-text">Lorem Ipsum is simply dummy text of the printing.</p> 
+                        </div>
+                    </div> 
+                </a>
+            </div>
+        </div>
+    </div> 
+    <!-- Resoluções -->
+    <div class="col-12 col-sm-12 col-xl-4 mb-4">
+        <div class="card border-0 shadow">
+            <div class="card-body">
+                <a href="{% url 'resolucaoListView' %}" >
+                    <div class="row d-block d-xl-flex align-items-center">
+                        <div class="col-12 col-xl-5 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center">
+                        <div class="icon-shape rounded me-4 me-sm-0" style="color: #40949C; background-color: rgba(64, 148, 156, 0.3);">
+                            <i class="fas fa-box fa-2x"></i>
+                        </div> 
+                        </div>
+                        <div class="col-12 col-xl-7 px-xl-0">
+                            <h5 class="card-title">Resoluções</h5>
+                            <p class="card-text">Lorem Ipsum is simply dummy text of the printing.</p> 
+                        </div>
+                    </div> 
+                </a>
+            </div>
+        </div>
+    </div>
+        <!-- Faixas -->
+        <div class="col-12 col-sm-12 col-xl-4 mb-4">
+            <div class="card border-0 shadow">
+                <div class="card-body">
+                    <a href="{% url 'FaixasFormListView' %}" >
+                        <div class="row d-block d-xl-flex align-items-center">
+                            <div class="col-12 col-xl-5 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center">
+                            <div class="icon-shape rounded me-4 me-sm-0" style="color: #40949C; background-color: rgba(64, 148, 156, 0.3);">
+                                <i class="fas fa-box fa-2x"></i>
+                            </div> 
+                            </div>
+                            <div class="col-12 col-xl-7 px-xl-0">
+                                <h5 class="card-title">Faixas</h5>
+                                <p class="card-text">Lorem Ipsum is simply dummy text of the printing.</p> 
+                            </div>
+                        </div> 
+                    </a>
+                </div>
+            </div>
+        </div> 
+    <!-- Tipos de Padrão -->
+    <div class="col-12 col-sm-12 col-xl-4 mb-4">
+        <div class="card border-0 shadow">
+            <div class="card-body">
+                <a href="{% url 'tipoPadraoView' %}" >
+                    <div class="row d-block d-xl-flex align-items-center">
+                        <div class="col-12 col-xl-5 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center">
+                        <div class="icon-shape rounded me-4 me-sm-0" style="color: #40949C; background-color: rgba(64, 148, 156, 0.3);">
+                            <i class="fas fa-box fa-2x"></i>
+                        </div> 
+                        </div>
+                        <div class="col-12 col-xl-7 px-xl-0">
+                            <h5 class="card-title">Tipos Padrões</h5>
+                            <p class="card-text">Lorem Ipsum is simply dummy text of the printing.</p> 
+                        </div>
+                    </div> 
+                </a>
+            </div>
+        </div>
+    </div>  
+     <!-- Padrões -->
+    <div class="col-12 col-sm-12 col-xl-4 mb-4">
+        <div class="card border-0 shadow">
+            <div class="card-body">
+                <a href="{% url 'NovoPadraoFormListView' %}" >
+                    <div class="row d-block d-xl-flex align-items-center">
+                        <div class="col-12 col-xl-5 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center">
+                        <div class="icon-shape rounded me-4 me-sm-0" style="color: #40949C; background-color: rgba(64, 148, 156, 0.3);">
+                            <i class="fas fa-box fa-2x"></i>
+                        </div> 
+                        </div>
+                        <div class="col-12 col-xl-7 px-xl-0">
+                            <h5 class="card-title">Padrões</h5>
+                            <p class="card-text">Lorem Ipsum is simply dummy text of the printing.</p> 
+                        </div>
+                    </div> 
+                </a>
+            </div>
+        </div>
+    </div>   
+    <!-- Criterio -->
+    <div class="col-12 col-sm-12 col-xl-4 mb-4">
+        <div class="card border-0 shadow">
+            <div class="card-body">
+                <a href="{% url 'Criterio_AceitacaoListView' %}" >
+                    <div class="row d-block d-xl-flex align-items-center">
+                        <div class="col-12 col-xl-5 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center">
+                        <div class="icon-shape  rounded me-4 me-sm-0" style="color: #40949C; background-color: rgba(64, 148, 156, 0.3);">
+                            <i class="fas fa-box fa-2x"></i>
+                        </div> 
+                        </div>
+                        <div class="col-12 col-xl-7 px-xl-0">
+                            <h5 class="card-title">Critérios</h5>
+                            <p class="card-text">Lorem Ipsum is simply dummy text of the printing.</p> 
+
+                        </div>
+                    </div> 
+                </a>
+            </div>
+        </div>
+    </div>  
+  <!--  Área Acreditação 
+    <div class="col-12 col-sm-12 col-xl-4 mb-4">
+        <div class="card border-0 shadow">
+            <div class="card-body">
+                <a href="{% url 'instrument_model_list' %}" >
+                    <div class="row d-block d-xl-flex align-items-center">
+                        <div class="col-12 col-xl-5 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center">
+                        <div class="icon-shape  rounded me-4 me-sm-0" style="color: #40949C; background-color: rgba(64, 148, 156, 0.3);">
+                            <i class="fas fa-box fa-2x"></i>
+                        </div> 
+                        </div>
+                        <div class="col-12 col-xl-7 px-xl-0">
+                            <h5 class="card-title">Modelo de Instrumento</h5>
+                            <p class="card-text">Lorem Ipsum is simply.</p> 
+                        </div>
+                    </div> 
+                </a>
+            </div>
+        </div>
+    </div> --> 
+</div>  
+{% endblock content %}
+
+

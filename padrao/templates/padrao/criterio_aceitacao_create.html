@@ -1,0 +1,31 @@
+{% extends 'layouts/base.html' %}
+{% load static %} 
+{% block content %}  
+<div class="d-block mb-4 mb-md-0 py-4 "> 
+    <h4>Cadastrar Critério de aceitação</h4> 
+</div>  
+<div class="row">
+    <div class="mb-5">
+      <div class="card border-0 shadow "> 
+        <div class="card-body">
+          <form method="post">
+            {% csrf_token %} 
+            <div class="row">
+              {% for field in form %}
+              <div class="col-lg-4 col-sm-6 mb-4"> 
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>   
+                {{ field }} 
+                
+              </div>
+              {% endfor %}
+              <div class="form-group d-flex justify-content-end ">  
+                <a href="{% url 'Criterio_AceitacaoListView' %}" class="btn btn-outline-primary mx-3 "> Cancelar</a> 
+                <button class="btn btn-primary" type="submit">Cadastrar</button>
+              </div>   
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+</div>   
+{% endblock content %}     

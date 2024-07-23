@@ -1,0 +1,2241 @@
+{% extends 'layouts/base.html' %}
+{% load static %} 
+{% block content %}  
+<!-- Adicione estas linhas ao head do seu HTML -->
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/css/select2.min.css"> -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/js/select2.min.js"></script>
+<style>
+  .form-control{
+    width: 44%;
+    display: inline-block;
+  }
+  .select2-container .select2-selection--single {
+    height: 40px !important;
+    border-radius: 8px !important;
+    border: 0.0625rem solid #D1D5DB !important;
+    
+  }
+  .select2-selection__rendered{
+    line-height: 40px !important;
+    font-size: 14px !important;
+    color: #6B7280 !important;
+    padding-left: 16px !important;
+  }
+  .select2-selection__arrow{
+    height: 35px !important;
+  }
+
+  p, ol li, ul li, .p {
+    font-size: 14px !important ;
+    color: #6B7280 !important;
+  }
+  .select2-dropdown{
+    border-radius: 8px !important;
+    
+  }
+  .select2-search__field{
+    font-size: 14px !important;
+    color: #6B7280 !important;
+
+  }
+    .tab-button {
+      cursor: pointer;
+      padding: 10px 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px 5px 0 0;
+      background-color: #f1f1f1;
+    }
+
+  .observacoes{
+    width: 300px;
+  } 
+  .modal-body{
+    display: flex;
+    flex-direction: column;
+  }
+  .modal-body .form-group{
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+  }
+  .modal-body .form-control{
+    width: 100%;
+    
+  }
+  .tab-container {
+      display: flex;
+    }
+
+    .tab-button {
+      cursor: pointer;
+      padding: 10px 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px 5px 0 0;
+      background-color: #f1f1f1;
+    }
+
+    #dialog-servicos{
+      max-width: 1500px;
+        
+    }
+
+    #content-servicos{
+      height: fit-content;
+    }
+
+    #card-table{
+      max-height: 325px;
+    }
+
+</style>
+<div class="d-block mb-4 mb-md-0 py-4 "> 
+    <h4>Novo Orçamento</h4> 
+  </div>
+<div class="tab-container">
+  <div class="tab-button" onclick="openTab('dados')">Dados do Orçamento</div>
+  <div class="tab-button" onclick="openTab('servicos')">Serviços</div>
+</div>     
+<div class="row">
+    <div class="row">
+      <div class="mb-5">
+        <div class="card border-0 shadow components-section">
+          <div class="card-body">
+            {% if messages %}
+              {% for message in messages %}
+              <div class="alert alert-danger alert-dismissible mt-2">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> 
+                  <span class="error-message">{{ message }}</span> 
+                  {{ form.errors }}
+              </div>
+              {% endfor %}
+            {% endif %}
+
+            <div class="tab-content" id="dados">
+              <form method="post" enctype="multipart/form-data" id="formEnviarServicos"> 
+                {% csrf_token %}
+                <div class="row">
+                  <div class="col-lg-4 col-sm-6">
+                    <div class="form-group mb-4">
+                      <label for="label">Cliente: </label><br>
+                      {{ form.solicitante }}
+                      <button style="position: relative;" id="modalOpen1" class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#clienteModal">
+                        <i class="fas fa-plus"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <input type="hidden" id="valoresSelecionadosInput" name="valoresSelecionados">
+
+                  <div class="col-lg-4 col-sm-6">
+                      <div class="form-group mb-4">
+                        <label for="label">Contato: </label><br>
+                        <select class="form-control select2" id="contato" name="contato">
+                        </select>
+                        <button style="position: relative;" id="modalOpen" class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#contatoModal">
+                          <i class="fas fa-plus"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                      <div class="form-group mb-4">
+                        <label for="label">Responsável: </label><br>
+                        {{ form.responsavel }}
+                        <button style="position: relative;" id="modalOpen6" class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#tipoOrcamentoModal">
+                          <i class="fas fa-plus"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                      <div class="form-group mb-4">
+                        <label for="label">Data de emissão: </label><br>
+                        {{ form.data_cadastro }}
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                      <div class="form-group mb-4">
+                        <label for="label">Validade da proposta: </label><br>
+                        {{ form.validade_proposta }}
+                        <!--<input type="date" id="id_validade_proposta" class="form-control">-->
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                      <div class="form-group mb-4">
+                        <label for="label">Forma de pagamento: </label><br>
+                        <!--<select class="form-control" name="" id="id_forma_pagamento">
+                          <option value="dinheiro">Dinheiro</option>
+                          <option value="credito">Crédito	</option>
+                          <option value="debito">Débito</option>
+                          <option value="boleto">Boleto</option>
+                          {% for i in forma %}
+                          <option value="{{ i.forma }}">{{ i.forma }}</option>
+                          {% endfor %}
+                        </select>-->
+                        {{ form.forma_pagamento }}
+                        <button style="position: relative;" id="modalOpen3" class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#contatoModal">
+                          <i class="fas fa-plus"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                      <div class="form-group mb-4">
+                        <label for="label">Condição de pagamento: </label><br>
+                        <!--<select class="form-control" name="" id="id_modo_pagamento">
+                          <option value="">30 dias</option>
+                          <option value="">60 dias	</option>
+                          <option value="">90 dias</option>
+                          <option value="">120 dias</option>
+                          {% for i in condicao %}
+                          <option value="{{ i.id }}">{{ i }}</option>
+                          {% endfor %}
+                        </select>-->
+                        {{ form.condicao_pagamento }}
+                        <button style="position: relative;" id="modalOpen4" class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#contatoModal">
+                          <i class="fas fa-plus"></i>
+                        </button>
+                      </div>
+                    </div>
+                    {% for field in form_tipo_orcamento %}
+                    <div class="col-lg-4 col-sm-6">
+                      <div class="form-group mb-4">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}:</label><br>
+                        <!--<select class="form-control" name="" id="id_tipo_orcamento">
+                          <option value="">Calibração</option>
+                          <option value="">Manutenção	</option>
+                          <option value="">Qualificação</option>
+                          <option value="">Ensaio</option>
+                          {% for i in tipos_orcamento %}
+                          <option value="{{ i }}">{{ i }}</option>
+                          {% endfor %}
+                        </select>-->
+                        {{ form.tipo_orcamento }}
+                        <button style="position: relative;" id="modalOpen2" class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#tipoOrcamentoModal">
+                          <i class="fas fa-plus"></i>
+                        </button>
+                      </div>
+                    </div>
+                    {% endfor %}
+                    <div class="col-lg-4 col-sm-6">
+                      <div class="form-group mb-4">
+                        <label for="label">Como foi solicitado: </label><br>
+                        {{ form.forma_solicitacao }}
+                        <button style="position: relative;" id="modalOpen5" class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#tipoOrcamentoModal">
+                          <i class="fas fa-plus"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                      <div class="form-group mb-4">
+                          <label for="label">Desconto em:</label><br>
+                          <label for="valor_real"> <input type="radio" id="tipo_de_desconto" name="tipo_de_desconto" value="valor_real"> Valor Real $ </label>
+                          <label for="porcentagem"> <input type="radio" id="tipo_de_desconto" name="tipo_de_desconto" value="porcentagem"> Porcentagem % </label>
+                          <label for="porcentagem"> <input class="form-control" type="number" id="desconto" name="desconto"> Desconto</label>
+                          <label for="porcentagem"> <input class="form-control" type="number" id="acrescimo" name="acrescimo"> Acréscimo</label>
+                      </div>
+                  </div>
+                  
+                    <div class="col-lg-4 col-sm-6">
+                      <div class="form-group mb-4">
+                        <label for="label"></label>
+                        {{ form.observacoes }}
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                      <div class="form-group mb-4">
+                        <label for="label">Local:</label>
+                        {{ form.local }}
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                      <div class="form-group mb-4">
+                        <label for="label">Contrato:</label>
+                        {{ form.contrato }}
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                      <div class="form-group mb-4">
+                          <label for="label">Anexos:</label><br>
+                          <div id="file-container">
+                              {{ form_anexo.anexo }}
+                          </div>
+                          <button type="button" id="add-file" class="btn btn-primary"><i class="fas fa-plus"></i> Adicionar Anexo</button>
+                      </div>
+                  </div>
+                  
+
+                    
+                </div>
+                
+                           
+            </div>
+            <div class="tab-content" id="servicos">
+              <div class="col-lg-4 col-sm-6">
+                  <div class="form-group mb-4 "> 
+                    <div>
+                        <button id="modalInserirCalibracao" class="btn btn-primary" type="button" data-toggle="modal" data-target="#contatoModal">Inserir Calibração</button>
+                    </div><br>
+                    <div>
+                        <button id="modalInserirManutencao" class="btn btn-primary" type="button" data-toggle="modal"> Inserir Manutenção</button>
+                    </div><br>
+                    <div>
+                        <button id="modalInserirEnsaio" class="btn btn-primary" type="button" data-toggle="modal" data-target="#contatoModal"> Inserir Ensaio Elétrico</button>
+                    </div><br>  
+                    <div>
+                        <button id="modalInserirQT" class="btn btn-primary" type="button" data-toggle="modal" data-target="#contatoModal"> Inserir Q T</button>
+                    </div>              
+                  </div>
+                    
+              </div>
+
+              <button type="submit" class="btn btn-primary">Salvar</button>
+              
+            </div>
+          </form>   
+    <!--novo contato-->
+    <div class="modal fade" id="contatoModal" tabindex="-1" role="dialog" aria-labelledby="contatoModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="contatoModalLabel">Novo Contato</h5>
+                  
+              </div>
+              <div class="modal-body">
+                <form method="post" action="{% url 'add_contato' %}" id="contatoForm">
+                  {% csrf_token %}   
+                  {% for field in form_contato %}
+                  <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                    {{ field }}
+                </div>
+                {% endfor %}
+                  <br>
+                  <button type="submit" class="btn btn-primary">Enviar</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal" id="modalClose">Fechar</button>
+              </form>
+              <table class="table table-hover" style="min-height: 200px;">
+                <thead>
+                    <tr>
+                        <th class="border-gray-200">Item</th>
+                        <th class="border-gray-200">Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in contatos %}      
+                        <tr>
+                            <td>{{ i }}</td>
+                            <td>
+                                <a class="dropdown-item text-danger rounded-bottom" href="" data-bs-toggle="modal" data-bs-target="#confirmDeleteContatoModal{{ i.id }}"><span class="fas fa-trash-alt me-2"></span>Deletar</a>
+                            </td>
+                        </tr>   
+                    {% endfor %}
+                </tbody>
+            </table>
+              </div>
+          </div>
+      </div>
+    </div>
+    <!--deletar contato-->
+    {% for i in contatos %}
+    <div class="modal fade" id="confirmDeleteContatoModal{{ i.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Confirmação de Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza que deseja deletar o contato {{ i }}?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <a href="{% url 'delete_contato' i.id %}" class="btn btn-danger">Deletar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+    <!--novo tipo de orçamento-->
+    <div class="modal fade" id="tipoOrcamentoModal" tabindex="-1" role="dialog" aria-labelledby="tipoOrcamentoModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="tipoOrcamentoModalLabel">Novo Tipo de Orçamento</h5>
+                  
+              </div>
+              <div class="modal-body">
+                <form method="post" action="{% url 'orcamento-type-create' %}" id="tipoOrcamentoForm">
+                  {% csrf_token %}
+                  {% for field in form_tipo_orcamento %}
+                  <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                    {{ field }}
+                </div>
+                {% endfor %}
+                  <br>
+                  <button type="submit" class="btn btn-primary">Enviar</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal" id="modalClose2">Fechar</button>
+              </form>
+              <table class="table table-hover" style="min-height: 200px;">
+                <thead>
+                    <tr>
+                        <th class="border-gray-200">Item</th>
+                        <th class="border-gray-200">Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in tipos_orcamento %}      
+                        <tr>
+                            <td>{{ i }}</td>
+                            <td>
+                                <a class="dropdown-item text-danger rounded-bottom" href="" data-bs-toggle="modal" data-bs-target="#confirmDeleteTipoOrcamentoModal{{ i.id }}"><span class="fas fa-trash-alt me-2"></span>Deletar</a>
+                            </td>
+                        </tr>   
+                    {% endfor %}
+                </tbody>
+            </table>
+              </div>
+          </div>
+      </div>
+    </div>
+    <!--deletar tipo de orçamento-->
+    {% for i in tipos_orcamento %}
+    <div class="modal fade" id="confirmDeleteTipoOrcamentoModal{{ i.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Confirmação de Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza que deseja deletar o tipo de orçamento {{ i }}?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <a href="{% url 'delete_tipo_orcamento' i.id %}" class="btn btn-danger">Deletar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+    <!-- tipo de cliente -->
+    <div class="modal fade" id="clienteModal" tabindex="-1" role="dialog" aria-labelledby="clienteModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="clienteModalLabel">Novo Cliente</h5>
+              </div>
+              <div class="modal-body">
+                <button id="modalOpenCNPJ" class="btn btn-primary">Cadastrar por CNPJ</button>
+                <button id="modalOpenCPF" class="btn btn-primary">Cadastrar por CPF</button>
+              </div>
+              <!-- <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" id="modalClose1">Fechar</button> -->
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" id="modalClose1">Fechar</button>
+              </div>
+          </div>
+
+          
+
+      </div>
+    <!--novo cliente CNPJ-->
+    <div class="modal fade" id="clienteModalCNPJ" tabindex="-1" role="dialog" aria-labelledby="clienteModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="clienteModalLabel">Novo Cliente</h5>
+                  
+              </div>
+              <div class="modal-body">
+                <form method="post" id="clienteForm" action="{% url 'add_cnpj' %}">
+                  {% csrf_token %}
+                  {% for field in form_cliente %}
+                  <div class="form-group">
+                    
+                    <label for="{{ field.id_for_label }}">{{ field.label }}:            {% if field.name == 'cnpj' %}
+                    <button class="btn btn-primary" type="button" id="consultarCnpjBtn">Consultar empresa</button>{% endif %}</label>
+                    {{ field }}
+                  
+                </div>
+                {% endfor %}
+                  <br>
+                  <button type="submit" class="btn btn-primary">Enviar</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal" id="modalCloseCNPJ">Fechar</button>
+              </form>
+            </div>
+              <table class="table table-hover" style="min-height: 200px;">
+                <thead>
+                    <tr>
+                        <th class="border-gray-200">Item</th>
+                        <th class="border-gray-200">Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in clientes %}      
+                        <tr>
+                            <td>{{ i }}</td>
+                            <td>
+                                <a class="dropdown-item text-danger rounded-bottom" href="" data-bs-toggle="modal" data-bs-target="#confirmDeleteClienteModal{{ i.id }}"><span class="fas fa-trash-alt me-2"></span>Deletar</a>
+                            </td>
+                        </tr>   
+                    {% endfor %}
+                </tbody>
+            </table>
+              </div>
+          </div>
+      </div>
+    </div>
+    <!-- novo cliente CPF -->
+    <div class="modal fade" id="clienteModalCPF" tabindex="-1" role="dialog" aria-labelledby="clienteModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="clienteModalLabel">Novo Cliente</h5>
+                  
+              </div>
+              <div class="modal-body">
+                <form method="post" id="clienteFormCPF" action="{% url 'add_cpf' %}">
+                  {% csrf_token %}   
+                  {% for field in form_cliente_cpf %}
+                  <div class="form-group">
+                    
+                    <label for="{{ field.id_for_label }}">{{ field.label }}:           
+                   </label>
+                    {{ field }}
+                  
+                </div>
+                {% endfor %}
+                  <br>
+                  <button type="submit" class="btn btn-primary">Enviar</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal" id="modalCloseCPF">Fechar</button>
+              </form>
+            </div>
+              <table class="table table-hover" style="min-height: 200px;">
+                <thead>
+                    <tr>
+                        <th class="border-gray-200">Item</th>
+                        <th class="border-gray-200">Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in clientes %}      
+                        <tr>
+                            <td>{{ i }}</td>
+                            <td>
+                                <a class="dropdown-item text-danger rounded-bottom" href="" data-bs-toggle="modal" data-bs-target="#confirmDeleteClienteModal{{ i.id }}"><span class="fas fa-trash-alt me-2"></span>Deletar</a>
+                            </td>
+                        </tr>   
+                    {% endfor %}
+                </tbody>
+            </table>
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <!--deletar cliente-->
+    {% for i in clientes %}
+    <div class="modal fade" id="confirmDeleteClienteModal{{ i.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Confirmação de Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza que deseja deletar o cliente {{ i }}?</p>
+                </div>
+                <div class="modal-footer">
+                    <a href=""><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button></a>
+                    <a href="{% url 'delete_cliente' i.id %}" class="btn btn-danger">Deletar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+    <!--nova forma de pagamento-->
+    <div class="modal fade" id="formaPagamentoModal" tabindex="-1" role="dialog" aria-labelledby="formaPagamentoLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="clienteModalLabel">Nova Forma de Pagamento</h5>
+                  
+              </div>
+              <div class="modal-body">
+                <form method="post" action="{% url 'forma_create' %}" id="formaPagamentoForm">
+                  {% csrf_token %}
+                  {% for field in form_pagamento_forma %}
+                  <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                    {{ field }}
+                  </div>
+                {% endfor %}
+                  <br>
+                  <button type="submit" class="btn btn-primary">Enviar</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal" id="modalClose3">Fechar</button>
+              </form>
+              <table class="table table-hover" style="min-height: 200px;">
+                <thead>
+                    <tr>
+                        <th class="border-gray-200">Item</th>
+                        <th class="border-gray-200">Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in forma %}      
+                        <tr>
+                            <td>{{ i }}</td>
+                            <td>
+                                <a class="dropdown-item text-danger rounded-bottom" href="" data-bs-toggle="modal" data-bs-target="#confirmDeleteFormaModal{{ i.id }}"><span class="fas fa-trash-alt me-2"></span>Deletar</a>
+                            </td>
+                        </tr>   
+                    {% endfor %}
+                </tbody>
+            </table>
+              </div>
+          </div>
+      </div>
+    </div>
+        <!--deletar forma-->
+        {% for i in forma %}
+        <div class="modal fade" id="confirmDeleteFormaModal{{ i.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Confirmação de Exclusão</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Tem certeza que deseja deletar a forma de pagamento {{ i }}?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <a href="{% url 'delete_pagamento_forma' i.id %}" class="btn btn-danger">Deletar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    <!--nova condição-->
+    <div class="modal fade" id="condicaoPagamentoModal" tabindex="-1" role="dialog" aria-labelledby="formaPagamentoLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="clienteModalLabel">Nova Condição de Pagamento</h5>
+                  
+              </div>
+              <div class="modal-body">
+                <form method="post" id="condicaoPagamentoForm" action="{% url 'condicao_create' %}">
+                  {% csrf_token %}
+                  {% for field in form_pagamento_condicao %}
+                  <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                    {{ field }}
+                </div>
+                {% endfor %}
+                  <br>
+                  <button type="submit" class="btn btn-primary">Enviar</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal" id="modalClose4">Fechar</button>
+              </form>
+              <table class="table table-hover" style="min-height: 200px;">
+                <thead>
+                    <tr>
+                        <th class="border-gray-200">Item</th>
+                        <th class="border-gray-200">Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in condicao %}      
+                        <tr>
+                            <td>{{ i }}</td>
+                            <td>
+                                <a class="dropdown-item text-danger rounded-bottom" href="" data-bs-toggle="modal" data-bs-target="#confirmDeleteCondicaoModal{{ i.id }}"><span class="fas fa-trash-alt me-2"></span>Deletar</a>
+                            </td>
+                        </tr>   
+                    {% endfor %}
+                </tbody>
+            </table>
+              </div>
+          </div>
+      </div>
+    </div>
+            <!--deletar condicao-->
+            {% for i in condicao %}
+            <div class="modal fade" id="confirmDeleteCondicaoModal{{ i.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Confirmação de Exclusão</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Tem certeza que deseja deletar a condição de pagamento {{ i }}?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <a href="{% url 'delete_pagamento_condicao' i.id %}" class="btn btn-danger">Deletar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    <!--nova condição-->
+    <div class="modal fade" id="responsavelModal" tabindex="-1" role="dialog" aria-labelledby="formaPagamentoLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="clienteModalLabel">Novo Responsável</h5>
+                  
+              </div>
+              <div class="modal-body">
+                <form method="post" id="responsavelForm" action="{% url 'create_responsavel' %}">
+                  {% csrf_token %}
+                  {% for field in form_responsaveis %}
+                  <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                    {{ field }}
+                </div>
+                {% endfor %}
+                  <br>
+                  <button type="submit" class="btn btn-primary">Enviar</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal" id="modalClose6">Fechar</button>
+              </form>
+              <table class="table table-hover" style="min-height: 200px;">
+                <thead>
+                    <tr>
+                        <th class="border-gray-200">Item</th>
+                        <th class="border-gray-200">Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in responsaveis %}      
+                        <tr>
+                            <td>{{ i.full_name }}</td>
+                            <td>
+                                <a class="dropdown-item text-danger rounded-bottom" href="" data-bs-toggle="modal" data-bs-target="#confirmDeleteResponsavelModal{{ i.id }}"><span class="fas fa-trash-alt me-2"></span>Deletar</a>
+                            </td>
+                        </tr>   
+                    {% endfor %}
+                </tbody>
+            </table>
+              </div>
+          </div>
+      </div>
+    </div>
+    {% for i in responsaveis %}
+            <div class="modal fade" id="confirmDeleteResponsavelModal{{ i.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Confirmação de Exclusão</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Tem certeza que deseja deletar o colaborador {{ i.full_name }}?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <a href="{% url 'delete_responsavel' i.id %}" class="btn btn-danger">Deletar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        <!--nova condição-->
+        <div class="modal fade" id="solicitacaoModal" tabindex="-1" role="dialog" aria-labelledby="formaPagamentoLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="clienteModalLabel">Nova forma de solicitação</h5>
+                      
+                  </div>
+                  <div class="modal-body">
+                    <form method="post" id="solicitacaoForm" action="{% url 'solicitacao_create' %}">
+                      {% csrf_token %}
+                      {% for field in form_solicitacao %}
+                      <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                        {{ field }}
+                    </div>
+                    {% endfor %}  
+                      <br>
+                      <button type="submit" class="btn btn-primary">Enviar</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal" id="modalClose5">Fechar</button>
+                  </form>
+                  <table class="table table-hover" style="min-height: 200px;">
+                    <thead>
+                        <tr>
+                            <th class="border-gray-200">Item</th>
+                            <th class="border-gray-200">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in solicitacao %}      
+                            <tr>
+                                <td>{{ i }}</td>
+                                <td>
+                                    <a class="dropdown-item text-danger rounded-bottom" href="" data-bs-toggle="modal" data-bs-target="#confirmDeleteSolicitacaoModal{{ i.id }}"><span class="fas fa-trash-alt me-2"></span>Deletar</a>
+                                </td>
+                            </tr>   
+                        {% endfor %}
+                    </tbody>
+                </table>
+                  </div>
+              </div>
+          </div>
+        </div>
+        {% for i in solicitacao %}
+            <div class="modal fade" id="confirmDeleteSolicitacaoModal{{ i.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Confirmação de Exclusão</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Tem certeza que deseja deletar a forma de solicitação {{ i }}?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <a href="{% url 'delete_solicitacao' i.id %}" class="btn btn-danger">Deletar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        
+        <!--MODAIS SERVICOS-->
+        <!-- Inserir Calibração  -->
+        <div class="modal fade" id="InserirCalibracaoModal" tabindex="-1" role="dialog" aria-labelledby="formaPagamentoLabel" aria-hidden="true">
+          <div id="dialog-servicos" class="modal-dialog" role="document">
+              <div id="content-servicos" class="modal-content" role="document">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="clienteModalLabel">Inserir calibração</h5>                                            
+                    </div>  
+                    <div class="modal-body" >
+                      <div class="col-12 col-md-6 col-lg-4">
+                        <div class="input-group input-group-with-space" style="flex-wrap: nowrap; align-items: center; width: 300px;">
+                            <input id="searchInput" name="search" type="text" class="form-control " placeholder="Pesquisar" aria-label="Pesquisar">
+                            <button id="searchButton" class="btn btn-primary" type="button"><i class="fas fa-search"></i></button>
+                        </div>
+                        <div style="width: 300px;">
+                          <button id="modalCalibracaoOpen" class="btn btn-primary" type="button" data-toggle="modal"><i class="fas fa-plus"></i> Adicionar novo item</button>
+                        </div>
+                      </div> 
+                      <div id="card-table" class="card card-body border-0 shadow table-wrapper table-responsive mb-5 ">
+                        <table class="table table-hover" >
+                          <thead>
+                            <tr>
+                                <th><input id="marcarTodos" type="checkbox"></th>
+                                <th></th>
+                                <th class="border-gray-200">Código</th>
+                                <th class="border-gray-200">Área de Acreditação</th>
+                                <th class="border-gray-200">Especificação</th>
+                                <th class="border-gray-200">Tipo de Calibração</th>
+                                <th class="border-gray-200">Tipo de Item</th>
+                                <th class="border-gray-200">Local</th>
+                                <th class="border-gray-200">Descrição</th>
+                                <th class="border-gray-200">Pontos</th>
+                                <th class="border-gray-200">Valor do Ponto Adicional</th>
+                                <th class="border-gray-200">Valor</th>
+                                <th style="display: none;" class="border-gray-200">Tipo de Serviço</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% if servico_calibracao %}
+                              {% for i in servico_calibracao %}
+                            <tr>
+                              
+                              <td><input class="checkboxItem" type="checkbox"></td>
+                              <td>
+                                <a class="rounded-top" href="" title="Ver detalhes"><span class="fas fa-eye me-2"></span></a>
+                                <a href=""><span class="fas fa-edit me-2" title="Editar"></span></a>
+                                <a class="text-danger rounded-bottom" href="" data-bs-toggle="modal" data-bs-target="#confirmDeleteModalCalibracao{{ i.id }}" title="Deletar"><span class="fas fa-trash-alt me-2"></span></a>
+                                <a href=""><span class="fas fa-file me-2" title="Calibração"></span></a>
+                                <a href=""><span class="fas fa-bolt me-2" title="Teste de Segurança Elétrica"></span></a>
+                              </td>
+                                <td>{{ i.codigo }}</td>
+                                <td>{{ i.area_acreditacao }}</td> 
+                                <td>{{ i.especificacao }}</td> 
+                                <td>{{ i.tipo_calibracao }}</td>
+                                <td>{{ i.tipo_item }}</td> 
+                                <td>{{ i.local }}</td>
+                                <td>{{ i.descricao }}</td>
+                                <td>{{ i.pontos }}</td>
+                                <td>{{ i.pontos_valor_adicional }}</td>
+                                <td>{{ i.valor }}</td>      
+                                <td style="display: none;"></td>                         
+                            </tr>
+                            {% endfor %}
+                            {% endif %}
+                          </tbody>
+                        </table>                        
+                      </div>
+                      <div class="modal-footer">
+                        <!-- <button id="enviarServicos" type="button" class="btn btn-primary" style="margin-right: 5px;">Inserir</button> -->
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="InserirCalibracaoModalClose">Fechar</button>                     
+                      </div>
+                    </div>
+              </div> 
+          </div>
+        </div>
+
+
+
+
+
+
+
+        {% for i in servico_calibracao %}
+                          <div class="modal fade" id="confirmDeleteModalCalibracao{{ i.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title" id="exampleModalLabel">Confirmação de Exclusão</h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                          <p>Tem certeza que deseja deletar o serviço {{ i }}?</p>
+                                      </div>
+                                      <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                          <a href="{% url 'delete_servico_calibracao' i.id %}" class="btn btn-danger">Deletar</a>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      {% endfor %}
+
+        <!-- Inserir Manutenção  -->
+        <div class="modal fade" id="InserirManutencaoModal" tabindex="-1" role="dialog" aria-labelledby="formaPagamentoLabel" aria-hidden="true">
+          <div id="dialog-servicos" class="modal-dialog" role="document">
+              <div id="content-servicos" class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="clienteModalLabel">Inserir manutenção</h5>                                            
+                    </div>  
+                    <div class="modal-body">
+                      <div class="col-12 col-md-6 col-lg-4">
+                        <div class="input-group input-group-with-space" style="flex-wrap: nowrap; align-items: center; width: 300px;">
+                            <input id="searchInput" name="search" type="text" class="form-control " placeholder="Pesquisar" aria-label="Pesquisar">
+                            <button id="searchButton" class="btn btn-primary" type="button"><i class="fas fa-search"></i></button>
+                        </div>
+                        <div style="width: 300px;">
+                          <button id="modalManutencaoOpen" class="btn btn-primary" type="button" data-toggle="modal"><i class="fas fa-plus"></i> Adicionar novo item</button>
+                        </div>
+                      </div> 
+                      <div id="card-table" class="card card-body border-0 shadow table-wrapper table-responsive mb-5 ">
+                        <table class="table table-hover" style="min-height: 200px;">
+                          <thead>
+                              <tr>
+                                  <th><input type="checkbox"></th>
+                                  <th></th>
+                                  <th class="border-gray-200">Código</th>
+                                  <th class="border-gray-200">Área de Acreditação</th>
+                                  <th class="border-gray-200">Especificação</th>
+                                  <th style="display: none;" class="border-gray-200">Tipo de Calibração</th>
+                                  <th style="display: none;" class="border-gray-200">Tipo de Item</th>
+                                  <th class="border-gray-200">Local</th>
+                                  <th class="border-gray-200">Descrição</th>
+                                  <th style="display: none;" class="border-gray-200">Pontos</th>
+                                  <th style="display: none;" class="border-gray-200">Valor do Ponto Adicional</th>
+                                  <th class="border-gray-200">Valor</th>
+                                  <th class="border-gray-200">Tipo de Serviço</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                            {% if servico_manutencao %}
+                              {% for i in servico_manutencao %}
+                            <tr>
+                              
+                              <td><input class="checkboxItem" type="checkbox"></td>
+                              <td>
+                                <a class="rounded-top" href="" title="Ver detalhes"><span class="fas fa-eye me-2"></span></a>
+                                <a href=""><span class="fas fa-edit me-2" title="Editar"></span></a>
+                                <a class="text-danger rounded-bottom" href="" data-bs-toggle="modal" data-bs-target="#confirmDeleteModalManutencao{{ i.id }}" title="Deletar"><span class="fas fa-trash-alt me-2"></span></a>
+                                <a href=""><span class="fas fa-file me-2" title="Calibração"></span></a>
+                                <a href=""><span class="fas fa-bolt me-2" title="Teste de Segurança Elétrica"></span></a>
+                              </td>
+                                <td>{{ i.codigo }}</td> 
+                                <td>{{ i.area_acreditacao }}</td>
+                                <td>{{ i.especificacao }}</td>
+                                <td style="display: none;"></td>
+                                <td style="display: none;"></td>
+                                <td>{{ i.local }}</td>
+                                <td>{{ i.descricao }}</td>
+                                <td style="display: none;"></td>
+                                <td style="display: none;"></td>                                
+                                <td>{{ i.valor }}</td>
+                                <td>{{ i.tipo_servico }}</td>
+                            </tr>
+                            {% endfor %}
+                            {% endif %}
+                          </tbody>
+                        </table>  
+                      </div>
+                      <div class="modal-footer">
+                        <!-- <button id="enviarServicos" type="button" class="btn btn-primary" style="margin-right: 5px;">Inserir</button> -->
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="InserirManutencaoModalClose">Fechar</button>                     
+                      </div>
+                    </div>
+              </div> 
+          </div>
+        </div>
+        {% for i in servico_manutencao %}
+                          <div class="modal fade" id="confirmDeleteModalManutencao{{ i.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title" id="exampleModalLabel">Confirmação de Exclusão</h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                          <p>Tem certeza que deseja deletar o serviço {{ i }}?</p>
+                                      </div>
+                                      <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                          <a href="{% url 'delete_servico_manutencao' i.id %}" class="btn btn-danger">Deletar</a>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      {% endfor %}
+
+        <!-- Inserir Ensaios Elétricos  -->
+        <div class="modal fade" id="InserirEnsaioModal" tabindex="-1" role="dialog" aria-labelledby="formaPagamentoLabel" aria-hidden="true">
+          <div id="dialog-servicos" class="modal-dialog" role="document">
+              <div id="content-servicos" class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="clienteModalLabel">Inserir ensaio elétrico</h5>                                            
+                    </div>  
+                    <div class="modal-body">
+                      <div class="col-12 col-md-6 col-lg-4">
+                        <div class="input-group input-group-with-space" style="flex-wrap: nowrap; align-items: center; width: 300px;">
+                            <input id="searchInput" name="search" type="text" class="form-control " placeholder="Pesquisar" aria-label="Pesquisar">
+                            <button id="searchButton" class="btn btn-primary" type="button"><i class="fas fa-search"></i></button>
+                        </div>
+                        <div style="width: 300px;">
+                          <button id="modalEnsaioOpen" class="btn btn-primary" type="button" data-toggle="modal"><i class="fas fa-plus"></i> Adicionar novo item</button>
+                        </div>
+                      </div> 
+                      <div id="card-table" class="card card-body border-0 shadow table-wrapper table-responsive mb-5 ">
+                        <table class="table table-hover" style="min-height: 200px;">
+                          <thead>
+                            <tr>
+                              <th><input type="checkbox"></th>
+                                  <th></th>
+                                  <th class="border-gray-200">Código</th>
+                                  <th class="border-gray-200">Área de Acreditação</th>
+                                  <th class="border-gray-200">Especificação</th>
+                                  <th style="display: none;" class="border-gray-200">Tipo de Calibração</th>
+                                  <th style="display: none;" class="border-gray-200">Tipo de Item</th>
+                                  <th class="border-gray-200">Local</th>
+                                  <th class="border-gray-200">Descrição</th>
+                                  <th style="display: none;" class="border-gray-200">Pontos</th>
+                                  <th style="display: none;" class="border-gray-200">Valor do Ponto Adicional</th>
+                                  <th class="border-gray-200">Valor</th>
+                                  <th class="border-gray-200">Tipo de Serviço</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                            {% if servico_ensaio %}
+                              {% for i in servico_ensaio %}
+                            <tr>
+                              
+                              <td><input class="checkboxItem" type="checkbox"></td>
+                              <td>
+                                <a class="rounded-top" href="" title="Ver detalhes"><span class="fas fa-eye me-2"></span></a>
+                                <a href=""><span class="fas fa-edit me-2" title="Editar"></span></a>
+                                <a class="text-danger rounded-bottom" href="" data-bs-toggle="modal" data-bs-target="#confirmDeleteModalEnsaio{{ i.id }}" title="Deletar"><span class="fas fa-trash-alt me-2"></span></a>
+                                <a href=""><span class="fas fa-file me-2" title="Calibração"></span></a>
+                                <a href=""><span class="fas fa-bolt me-2" title="Teste de Segurança Elétrica"></span></a>
+                              </td>
+                              <td>{{ i.codigo }}</td> 
+                              <td>{{ i.area_acreditacao }}</td>
+                              <td>{{ i.especificacao }}</td>
+                              <td style="display: none;"></td>
+                              <td style="display: none;"></td>
+                              <td>{{ i.local }}</td>
+                              <td>{{ i.descricao }}</td>
+                              <td style="display: none;"></td>
+                              <td style="display: none;"></td>                                
+                              <td>{{ i.valor }}</td>
+                              <td>{{ i.tipo_servico }}</td>
+                            </tr>
+                            {% endfor %}
+                            {% endif %}
+                          </tbody>
+                        </table>  
+                      </div>
+                      <div class="modal-footer">
+                        <!-- <button id="enviarServicos" type="button" class="btn btn-primary" style="margin-right: 5px;">Inserir</button> -->
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="InserirEnsaioModalClose">Fechar</button>                     
+                      </div>
+                    </div>
+              </div> 
+          </div>
+        </div>
+        {% for i in servico_ensaio %}
+                          <div class="modal fade" id="confirmDeleteModalEnsaio{{ i.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title" id="exampleModalLabel">Confirmação de Exclusão</h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                          <p>Tem certeza que deseja deletar o serviço {{ i }}?</p>
+                                      </div>
+                                      <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                          <a href="{% url 'delete_servico_ensaio' i.id %}" class="btn btn-danger">Deletar</a>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      {% endfor %}
+        <!-- Inserir Qualificações Térmicas  -->
+        <div class="modal fade" id="InserirQTModal" tabindex="-1" role="dialog" aria-labelledby="formaPagamentoLabel" aria-hidden="true">
+          <div id="dialog-servicos" class="modal-dialog" role="document">
+              <div id="content-servicos" class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="clienteModalLabel">Inserir qualificação térmica</h5>                                            
+                    </div>  
+                    <div class="modal-body">
+                      <div class="col-12 col-md-6 col-lg-4">
+                        <div class="input-group input-group-with-space" style="flex-wrap: nowrap; align-items: center; width: 300px;">
+                            <input id="searchInput" name="search" type="text" class="form-control " placeholder="Pesquisar" aria-label="Pesquisar">
+                            <button id="searchButton" class="btn btn-primary" type="button"><i class="fas fa-search"></i></button>
+                        </div>
+                        <div style="width: 300px;">
+                          <button id="modalQualificacaoOpen" class="btn btn-primary" type="button" data-toggle="modal"><i class="fas fa-plus"></i> Adicionar novo item</button>
+                        </div>
+                      </div> 
+                      <div id="card-table" class="card card-body border-0 shadow table-wrapper table-responsive mb-5 ">
+                        <table class="table table-hover" style="min-height: 200px;">
+                          <thead>
+                            <tr>
+                              <th><input type="checkbox"></th>
+                                  <th></th>
+                                  <th class="border-gray-200">Código</th>
+                                  <th class="border-gray-200">Área de Acreditação</th>
+                                  <th class="border-gray-200">Especificação</th>
+                                  <th style="display: none;" class="border-gray-200">Tipo de Calibração</th>
+                                  <th style="display: none;" class="border-gray-200">Tipo de Item</th>
+                                  <th class="border-gray-200">Local</th>
+                                  <th class="border-gray-200">Descrição</th>
+                                  <th style="display: none;" class="border-gray-200">Pontos</th>
+                                  <th style="display: none;" class="border-gray-200">Valor do Ponto Adicional</th>
+                                  <th class="border-gray-200">Valor</th>
+                                  <th class="border-gray-200">Tipo de Serviço</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                            {% if servico_qt %}
+                              {% for i in servico_qt %}
+                            <tr>
+                              
+                              <td><input class="checkboxItem" type="checkbox"></td>
+                              <td>
+                                <a class="rounded-top" href="" title="Ver detalhes"><span class="fas fa-eye me-2"></span></a>
+                                <a href=""><span class="fas fa-edit me-2" title="Editar"></span></a>
+                                <a class="text-danger rounded-bottom" href="" data-bs-toggle="modal" data-bs-target="#confirmDeleteModalQT{{ i.id }}" title="Deletar"><span class="fas fa-trash-alt me-2"></span></a>
+                                <a href=""><span class="fas fa-file me-2" title="Calibração"></span></a>
+                                <a href=""><span class="fas fa-bolt me-2" title="Teste de Segurança Elétrica"></span></a>
+                              </td>
+                              <td>{{ i.codigo }}</td> 
+                              <td>{{ i.area_acreditacao }}</td>
+                              <td>{{ i.especificacao }}</td>
+                              <td style="display: none;"></td>
+                              <td style="display: none;"></td>
+                              <td>{{ i.local }}</td>
+                              <td>{{ i.descricao }}</td>
+                              <td style="display: none;"></td>
+                              <td style="display: none;"></td>                                
+                              <td>{{ i.valor }}</td>
+                              <td>{{ i.tipo_servico }}</td>
+                            </tr>    
+                            {% endfor %}
+                              {% endif %}   
+                          </tbody>
+                        </table>  
+                      </div>
+                      <div class="modal-footer">
+                        <!-- <button id="enviarServicos" type="button" class="btn btn-primary" style="margin-right: 5px;">Inserir</button> -->
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="InserirQTModalClose">Fechar</button>                     
+                      </div>
+                    </div>
+              </div> 
+          </div>
+        </div>
+        {% for i in servico_qt %}
+                          <div class="modal fade" id="confirmDeleteModalQT{{ i.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title" id="exampleModalLabel">Confirmação de Exclusão</h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                          <p>Tem certeza que deseja deletar o serviço {{ i }}?</p>
+                                      </div>
+                                      <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                          <a href="{% url 'delete_servico_qt' i.id %}" class="btn btn-danger">Deletar</a>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      {% endfor %}
+        <!--novo servico calibracao-->
+        <div class="modal fade" id="calibracaoModal" tabindex="-1" role="dialog" aria-labelledby="formaPagamentoLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="clienteModalLabel">Nova calibração</h5>                      
+                  </div>
+                  <div class="modal-body">
+                    <form method="post" id="novaCalibracaoForm" action="{% url 'servico_calibracao_create' %}">
+                      {% csrf_token %}
+                      {% for field in form_servico_calibracao %}
+                      <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                        {{ field }}
+                      </div>
+                      {% endfor %} 
+                      <br>
+                      <button type="submit" class="btn btn-primary">Enviar</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal" id="modalCalibracaoClose">Fechar</button>
+                  </form>
+                  </div>
+              </div>
+          </div>
+        </div>
+
+
+
+        <!--nova serviço manutenção-->
+        <div class="modal fade" id="manutencaoModal" tabindex="-1" role="dialog" aria-labelledby="formaPagamentoLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="">Nova manutenção</h5>
+                      
+                  </div>
+                  <div class="modal-body">
+                    <form method="post" id="novaManutencaoForm" action="{% url 'servico_manutencao_create' %}">
+                      {% csrf_token %}
+                      {% for field in form_servico_manutencao %}
+                      <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                        {{ field }}
+                      </div>
+                      {% endfor %} 
+                      <br>
+                      <button type="submit" class="btn btn-primary">Enviar</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal" id="modalManutencaoClose">Fechar</button>
+                  </form>
+                  </div>
+              </div>
+          </div>
+        </div>
+
+        <!--nova serviço ensaio-->
+        <div class="modal fade" id="ensaioModal" tabindex="-1" role="dialog" aria-labelledby="formaPagamentoLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="clienteModalLabel">Novo ensaio elétrico</h5>
+                      
+                  </div>
+                  <div class="modal-body">
+                    <form method="post" id="novoEnsaioForm" action="{% url 'servico_ensaio_create' %}">
+                      {% csrf_token %}
+                      {% for field in form_servico_ensaio %}
+                      <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                        {{ field }}
+                      </div>
+                      {% endfor %} 
+                      <br>
+                      <button type="submit" class="btn btn-primary">Enviar</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal" id="modalEnsaioClose">Fechar</button>
+                  </form>
+                  </div>
+              </div>
+          </div>
+        </div>
+
+        <!--nova serviço qt-->
+        <div class="modal fade" id="qualificacaoModal" tabindex="-1" role="dialog" aria-labelledby="formaPagamentoLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="clienteModalLabel">Nova Q T</h5>
+                  </div>
+                  <div class="modal-body">
+                    <form method="post" id="novaQTForm" action="{% url 'servico_qt_create' %}">
+                      {% csrf_token %}
+                      {% for field in form_servico_qt %}
+                      <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                        {{ field }}
+                      </div>
+                      {% endfor %} 
+                      <br>
+                      <button type="submit" class="btn btn-primary">Enviar</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal" id="modalQualificacaoClose">Fechar</button>
+                  </form>
+                  </div>
+              </div>
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  <!-- Inclua o Bootstrap (inclui o jQuery e o Popper.js) -->
+
+  <script src="https://code.jquery.com/jquery-3.6.4.slim.min.js" integrity="sha384-m/qXs6Ta64ootdh3VSJsg0sw+LJ/eUdVto+qns9kekovxhjr8qMK/9UvaO0iXgg7" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+  
+  
+  <script>
+    document.getElementById('formEnviarServicos').addEventListener('submit', function(event) {
+      var checkboxes = document.querySelectorAll('.checkboxItem:checked');
+      var valoresSelecionados = [];
+  
+      checkboxes.forEach(function(checkbox) {
+          var row = checkbox.closest('tr');
+          var codigo = row.querySelector('td:nth-child(3)').textContent.trim();
+          var area_acreditacao = row.querySelector('td:nth-child(4)').textContent.trim();
+          var especificacao = row.querySelector('td:nth-child(5)').textContent.trim();
+          var tipo_calibracao = row.querySelector('td:nth-child(6)').textContent.trim();
+          var tipo_item = row.querySelector('td:nth-child(7)').textContent.trim();
+          var local = row.querySelector('td:nth-child(8)').textContent.trim();
+          var descricao = row.querySelector('td:nth-child(9)').textContent.trim();
+          var pontos = row.querySelector('td:nth-child(10)').textContent.trim();
+          var pontos_valor_adicional = row.querySelector('td:nth-child(11)').textContent.trim();
+          var valor = row.querySelector('td:nth-child(12)').textContent.trim();
+          var tipo_servico = row.querySelector('td:nth-child(13)').textContent.trim();
+  
+          var item = {
+              codigo: codigo,
+              area_acreditacao: area_acreditacao,
+              especificacao: especificacao,
+              tipo_calibracao: tipo_calibracao,
+              tipo_item: tipo_item,
+              local: local,
+              descricao: descricao,
+              pontos: pontos,
+              pontos_valor_adicional: pontos_valor_adicional,
+              valor: valor,
+              tipo_servico: tipo_servico
+          };
+  
+          valoresSelecionados.push(item);
+      });
+  
+      // Atualizar o valor do campo oculto com os valores selecionados em formato JSON
+      document.getElementById('valoresSelecionadosInput').value = JSON.stringify(valoresSelecionados);
+  });
+  
+    </script>
+    
+  
+  
+  
+  
+  
+  <!-- script modal responsavel -->
+  <script>
+    $(document).ready(function() {
+      $('#modalOpen5').click(function() {
+        $('#solicitacaoModal').modal('show');
+      });
+    });
+    $(document).ready(function() {
+      $('#modalClose5').click(function() {
+        console.log("Clicou no botão");
+        $('#solicitacaoModal').modal('hide');
+      });
+    });
+        // Adicionando manipulador para o envio do formulário
+        $('#solicitacaoForm').submit(function(e) {
+          e.preventDefault();  // Impede o envio padrão do formulário
+
+        // Lógica para validar o formulário, se necessário
+        // ...
+
+        // Enviar uma solicitação AJAX para a view do Django
+        $.ajax({
+          url: $(this).attr('action'),
+          type: 'POST',
+          data: $(this).serialize(),
+          success: function(response) {
+            console.log(response)
+            // Lógica de sucesso (se necessário)
+            console.log("Formulário enviado com sucesso!");
+            // Recarrega a página após o sucesso
+            location.reload();
+          },
+          error: function(error) {
+            console.log(error)
+            // Lógica de erro (se necessário)
+            console.error("Erro ao enviar o formulário:", error);
+          }
+        });
+      });
+  </script>
+  <!-- script modal responsavel -->
+  <script>
+    $(document).ready(function() {
+      $('#modalOpen6').click(function() {
+        console.log("Clicou no botão");
+        $('#responsavelModal').modal('show');
+      });
+    });
+    $(document).ready(function() {
+      $('#modalClose6').click(function() {
+        console.log("Clicou no botão");
+        $('#responsavelModal').modal('hide');
+      });
+    });
+        // Adicionando manipulador para o envio do formulário
+        $('#responsavelForm').submit(function(e) {
+          e.preventDefault();  // Impede o envio padrão do formulário
+
+        // Lógica para validar o formulário, se necessário
+        // ...
+
+        // Enviar uma solicitação AJAX para a view do Django
+        $.ajax({
+          url: $(this).attr('action'),
+          type: 'POST',
+          data: $(this).serialize(),
+          success: function(response) {
+            console.log(response)
+            // Lógica de sucesso (se necessário)
+            console.log("Formulário enviado com sucesso!");
+            // Recarrega a página após o sucesso
+            location.reload();
+          },
+          error: function(error) {
+            console.log(error)
+            // Lógica de erro (se necessário)
+            console.error("Erro ao enviar o formulário:", error);
+          }
+        });
+      });
+  </script>
+   <!-- script modal condicao pagamento -->
+   <script>
+    $(document).ready(function() {
+      $('#modalOpen4').click(function() {
+        console.log("Clicou no botão");
+        $('#condicaoPagamentoModal').modal('show');
+      });
+    });
+    $(document).ready(function() {
+      $('#modalClose4').click(function() {
+        console.log("Clicou no botão");
+        $('#condicaoPagamentoModal').modal('hide');
+      });
+    });
+        // Adicionando manipulador para o envio do formulário
+        $('#condicaoPagamentoForm').submit(function(e) {
+          e.preventDefault();  // Impede o envio padrão do formulário
+
+        // Lógica para validar o formulário, se necessário
+        // ...
+
+        // Enviar uma solicitação AJAX para a view do Django
+        $.ajax({
+          url: $(this).attr('action'),
+          type: 'POST',
+          data: $(this).serialize(),
+          success: function(response) {
+            console.log(response)
+            // Lógica de sucesso (se necessário)
+            console.log("Formulário enviado com sucesso!");
+            // Recarrega a página após o sucesso
+            location.reload();
+          },
+          error: function(error) {
+            console.log(error)
+            // Lógica de erro (se necessário)
+            console.error("Erro ao enviar o formulário:", error);
+          }
+        });
+      });
+  </script>
+  <!-- script modal forma de pagamento -->
+  <script>
+    $(document).ready(function() {
+      $('#modalOpen3').click(function() {
+        console.log("Clicou no botão");
+        $('#formaPagamentoModal').modal('show');
+      });
+    });
+    $(document).ready(function() {
+      $('#modalClose3').click(function() {
+        console.log("Clicou no botão");
+        $('#formaPagamentoModal').modal('hide');
+      });
+    });
+        // Adicionando manipulador para o envio do formulário
+        $('#formaPagamentoForm').submit(function(e) {
+          e.preventDefault();  // Impede o envio padrão do formulário
+
+        // Lógica para validar o formulário, se necessário
+        // ...
+
+        // Enviar uma solicitação AJAX para a view do Django
+        $.ajax({
+          url: $(this).attr('action'),
+          type: 'POST',
+          data: $(this).serialize(),
+          success: function(response) {
+            console.log(response)
+            // Lógica de sucesso (se necessário)
+            console.log("Formulário enviado com sucesso!");
+            // Recarrega a página após o sucesso
+            location.reload();
+          },
+          error: function(error) {
+            console.log(error)
+            // Lógica de erro (se necessário)
+            console.error("Erro ao enviar o formulário:", error);
+          }
+        });
+      });
+  </script>
+    <!-- script modal tipo orcamento -->
+    <script>
+      $(document).ready(function() {
+        $('#modalOpen2').click(function() {
+          console.log("Clicou no botão");
+          $('#tipoOrcamentoModal').modal('show');
+        });
+      });
+      $(document).ready(function() {
+        $('#modalClose2').click(function() {
+          console.log("Clicou no botão");
+          $('#tipoOrcamentoModal').modal('hide');
+        });
+      });
+          // Adicionando manipulador para o envio do formulário
+          $('#tipoOrcamentoForm').submit(function(e) {
+            e.preventDefault();  // Impede o envio padrão do formulário
+  
+          // Lógica para validar o formulário, se necessário
+          // ...
+  
+          // Enviar uma solicitação AJAX para a view do Django
+          $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+              console.log(response)
+              // Lógica de sucesso (se necessário)
+              console.log("Formulário enviado com sucesso!");
+              // Recarrega a página após o sucesso
+              location.reload();
+            },
+            error: function(error) {
+              console.log(error)
+              // Lógica de erro (se necessário)
+              console.error("Erro ao enviar o formulário:", error);
+            }
+          });
+        });
+    </script>
+  <!-- script modal client -->
+  <script>
+    $(document).ready(function() {
+      $('#modalOpen1').click(function() {
+        console.log("Clicou no botão");
+        $('#clienteModal').modal('show');
+      });
+    });
+    $(document).ready(function() {
+      $('#modalClose1').click(function() {
+        console.log("Clicou no botão");
+        $('#clienteModal').modal('hide');
+      });
+    });
+        // Adicionando manipulador para o envio do formulário
+        $('#clienteForm').submit(function(e) {
+          e.preventDefault();  // Impede o envio padrão do formulário
+
+        // Lógica para validar o formulário, se necessário
+        // ...
+
+        // Enviar uma solicitação AJAX para a view do Django
+        $.ajax({
+          url: $(this).attr('action'),
+          type: 'POST',
+          data: $(this).serialize(),
+          success: function(response) {
+            console.log(response)
+            // Lógica de sucesso (se necessário)
+            console.log("Formulário enviado com sucesso!");
+            // Recarrega a página após o sucesso
+            location.reload();
+          },
+          error: function(error) {
+            console.log(error)
+            // Lógica de erro (se necessário)
+            console.error("Erro ao enviar o formulário:", error);
+          }
+        });
+      });
+  </script>
+    <script>
+      $(document).ready(function() {
+        $('#modalOpenCNPJ').click(function() {
+          console.log("Clicou no botão");
+          $('#clienteModalCNPJ').modal('show');
+        });
+      });
+      $(document).ready(function() {
+        $('#modalCloseCNPJ').click(function() {
+          console.log("Clicou no botão");
+          $('#clienteModalCNPJ').modal('hide');
+        });
+      });
+          // Adicionando manipulador para o envio do formulário
+          $('#clienteForm').submit(function(e) {
+            e.preventDefault();  // Impede o envio padrão do formulário
+  
+          // Lógica para validar o formulário, se necessário
+          // ...
+  
+          // Enviar uma solicitação AJAX para a view do Django
+          $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+              console.log(response)
+              // Lógica de sucesso (se necessário)
+              console.log("Formulário enviado com sucesso!");
+              // Recarrega a página após o sucesso
+              location.reload();
+            },
+            error: function(error) {
+              console.log(error)
+              // Lógica de erro (se necessário)
+              console.error("Erro ao enviar o formulário:", error);
+            }
+          });
+        });
+    </script>
+     <script>
+      $(document).ready(function() {
+        $('#modalOpenCPF').click(function() {
+          console.log("Clicou no botão");
+          $('#clienteModalCPF').modal('show');
+        });
+      });
+      $(document).ready(function() {
+        $('#modalCloseCPF').click(function() {
+          console.log("Clicou no botão");
+          $('#clienteModalCPF').modal('hide');
+        });
+      });
+          // Adicionando manipulador para o envio do formulário
+          $('#clienteFormCPF').submit(function(e) {
+            e.preventDefault();  // Impede o envio padrão do formulário
+  
+          // Lógica para validar o formulário, se necessário
+          // ...
+  
+          // Enviar uma solicitação AJAX para a view do Django
+          $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+              console.log(response)
+              // Lógica de sucesso (se necessário)
+              console.log("Formulário enviado com sucesso!");
+              // Recarrega a página após o sucesso
+              location.reload();
+            },
+            error: function(error) {
+              console.log(error)
+              // Lógica de erro (se necessário)
+              console.error("Erro ao enviar o formulário:", error);
+            }
+          });
+        });
+    </script>
+  <!-- script modal contato -->
+  <script>
+    $(document).ready(function() {
+      $('#modalOpen').click(function() {
+        console.log("Clicou no botão");
+        $('#contatoModal').modal('show');
+      });
+    });
+    $(document).ready(function() {
+      $('#modalClose').click(function() {
+        console.log("Clicou no botão");
+        $('#contatoModal').modal('hide');
+      });
+    });
+        // Adicionando manipulador para o envio do formulário
+        $('#contatoForm').submit(function(e) {
+          e.preventDefault();  // Impede o envio padrão do formulário
+
+        // Lógica para validar o formulário, se necessário
+        // ...
+
+        // Enviar uma solicitação AJAX para a view do Django
+        $.ajax({
+          url: $(this).attr('action'),
+          type: 'POST',
+          data: $(this).serialize(),
+          success: function(response) {
+            // Lógica de sucesso (se necessário)
+            console.log("Formulário enviado com sucesso!");
+            location.reload();  // Recarrega a página após o sucesso
+          },
+          error: function(error) {
+            // Lógica de erro (se necessário)
+            console.error("Erro ao enviar o formulário:", error);
+          }
+        });
+      });
+  </script>
+
+    <!-- script modal serviços -->
+
+    <!-- Inserir Calibração -->
+    <script>
+      $(document).ready(function() {
+        $('#modalInserirCalibracao').click(function() {
+          console.log("Clicou no botão");
+          $('#InserirCalibracaoModal').modal('show');
+        });
+      });
+      $(document).ready(function() {
+        $('#InserirCalibracaoModalClose').click(function() {
+          console.log("Clicou no botão");
+          $('#InserirCalibracaoModal').modal('hide');
+        });
+      });
+      // Adicionando manipulador para o envio do formulário
+      $('#novaCalibracaoForm').submit(function(e) {
+            e.preventDefault();
+          $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+              // Lógica de sucesso (se necessário)
+              console.log("Formulário enviado com sucesso!");
+              location.reload();  // Recarrega a página após o sucesso
+            },
+            error: function(error) {
+              // Lógica de erro (se necessário)
+              console.error("Erro ao enviar o formulário:", error);
+            }
+          });
+        });
+    </script>
+
+    <!-- Inserir Manutenção -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/js/select2.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        $('#modalInserirManutencao').click(function() {
+          console.log("Clicou no botão");
+          $('#InserirManutencaoModal').modal('show');
+        });
+      });
+      $(document).ready(function() {
+        $('#InserirManutencaoModalClose').click(function() {
+          console.log("Clicou no botão");
+          $('#InserirManutencaoModal').modal('hide');
+        });
+      });
+      $('').submit(function(e) {
+            e.preventDefault();
+          $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+              // Lógica de sucesso (se necessário)
+              console.log("Formulário enviado com sucesso!");
+              location.reload();  // Recarrega a página após o sucesso
+            },
+            error: function(error) {
+              // Lógica de erro (se necessário)
+              console.error("Erro ao enviar o formulário:", error);
+            }
+          });
+        });
+    </script>
+
+    <!-- Inserir Ensaios Elétricos -->
+    <script>
+      $(document).ready(function() {
+        $('#modalInserirEnsaio').click(function() {
+          console.log("Clicou no botão");
+          $('#InserirEnsaioModal').modal('show');
+        });
+      });
+      $(document).ready(function() {
+        $('#InserirEnsaioModalClose').click(function() {
+          console.log("Clicou no botão");
+          $('#InserirEnsaioModal').modal('hide');
+        });
+      });
+      // Adicionando manipulador para o envio do formulário
+      $('#novoEnsaioForm').submit(function(e) {
+            e.preventDefault();  // Impede o envio padrão do formulário
+  
+          // Lógica para validar o formulário, se necessário
+          // ...
+  
+          // Enviar uma solicitação AJAX para a view do Django
+          $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+              // Lógica de sucesso (se necessário)
+              console.log("Formulário enviado com sucesso!");
+              location.reload();  // Recarrega a página após o sucesso
+            },
+            error: function(error) {
+              // Lógica de erro (se necessário)
+              console.error("Erro ao enviar o formulário:", error);
+            }
+          });
+        });
+    </script>
+
+    <!-- Inserir Qualificações Térmicas -->
+    <script>
+      $(document).ready(function() {
+        $('#modalInserirQT').click(function() {
+          console.log("Clicou no botão");
+          $('#InserirQTModal').modal('show');
+        });
+      });
+      $(document).ready(function() {
+        $('#InserirQTModalClose').click(function() {
+          console.log("Clicou no botão");
+          $('#InserirQTModal').modal('hide');
+        });
+      });
+      // Adicionando manipulador para o envio do formulário
+      $('#novaQTForm').submit(function(e) {
+            e.preventDefault();  // Impede o envio padrão do formulário
+  
+          // Lógica para validar o formulário, se necessário
+          // ...
+  
+          // Enviar uma solicitação AJAX para a view do Django
+          $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+              // Lógica de sucesso (se necessário)
+              console.log("Formulário enviado com sucesso!");
+              location.reload();  // Recarrega a página após o sucesso
+            },
+            error: function(error) {
+              // Lógica de erro (se necessário)
+              console.error("Erro ao enviar o formulário:", error);
+            }
+          });
+        });
+    </script>
+    
+    <script>
+      $(document).ready(function() {
+        $('#modalCalibracaoOpen').click(function() {
+          console.log("Clicou no botão");
+          $('#calibracaoModal').modal('show');
+        });
+      });
+      $(document).ready(function() {
+        $('#modalCalibracaoClose').click(function() {
+          console.log("Clicou no botão");
+          $('#calibracaoModal').modal('hide');
+        });
+      });
+          // Adicionando manipulador para o envio do formulário
+          $('').submit(function(e) {
+            e.preventDefault();  // Impede o envio padrão do formulário
+  
+          // Lógica para validar o formulário, se necessário
+          // ...
+  
+          // Enviar uma solicitação AJAX para a view do Django
+          $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+              // Lógica de sucesso (se necessário)
+              console.log("Formulário enviado com sucesso!");
+              location.reload();  // Recarrega a página após o sucesso
+            },
+            error: function(error) {
+              // Lógica de erro (se necessário)
+              console.error("Erro ao enviar o formulário:", error);
+            }
+          });
+        });
+    </script>
+    <script>
+      $(document).ready(function() {
+        $('#modalManutencaoOpen').click(function() {
+          console.log("Clicou no botão");
+          $('#manutencaoModal').modal('show');
+        });
+      });
+      $(document).ready(function() {
+        $('#modalManutencaoClose').click(function() {
+          console.log("Clicou no botão");
+          $('#manutencaoModal').modal('hide');
+        });
+      });
+          // Adicionando manipulador para o envio do formulário
+          $('#novaManutencaoForm').submit(function(e) {
+            e.preventDefault();  // Impede o envio padrão do formulário
+  
+          // Lógica para validar o formulário, se necessário
+          // ...
+  
+          // Enviar uma solicitação AJAX para a view do Django
+          $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+              // Lógica de sucesso (se necessário)
+              console.log("Formulário enviado com sucesso!");
+              location.reload();  // Recarrega a página após o sucesso
+            },
+            error: function(error) {
+              // Lógica de erro (se necessário)
+              console.error("Erro ao enviar o formulário:", error);
+            }
+          });
+        });
+    </script>
+    <script>
+      $(document).ready(function() {
+        $('#modalEnsaioOpen').click(function() {
+          console.log("Clicou no botão");
+          $('#ensaioModal').modal('show');
+        });
+      });
+      $(document).ready(function() {
+        $('#modalEnsaioClose').click(function() {
+          console.log("Clicou no botão");
+          $('#ensaioModal').modal('hide');
+        });
+      });
+          // Adicionando manipulador para o envio do formulário
+          $('').submit(function(e) {
+            e.preventDefault();  // Impede o envio padrão do formulário
+  
+          // Lógica para validar o formulário, se necessário
+          // ...
+  
+          // Enviar uma solicitação AJAX para a view do Django
+          $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+              // Lógica de sucesso (se necessário)
+              console.log("Formulário enviado com sucesso!");
+              location.reload();  // Recarrega a página após o sucesso
+            },
+            error: function(error) {
+              // Lógica de erro (se necessário)
+              console.error("Erro ao enviar o formulário:", error);
+            }
+          });
+        });
+    </script>
+    <script>
+      $(document).ready(function() {
+        $('#modalQualificacaoOpen').click(function() {
+          console.log("Clicou no botão");
+          $('#qualificacaoModal').modal('show');
+        });
+      });
+      $(document).ready(function() {
+        $('#modalQualificacaoClose').click(function() {
+          console.log("Clicou no botão");
+          $('#qualificacaoModal').modal('hide');
+        });
+      });
+          // Adicionando manipulador para o envio do formulário
+          $('').submit(function(e) {
+            e.preventDefault();  // Impede o envio padrão do formulário
+  
+          // Lógica para validar o formulário, se necessário
+          // ...
+  
+          // Enviar uma solicitação AJAX para a view do Django
+          $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+              // Lógica de sucesso (se necessário)
+              console.log("Formulário enviado com sucesso!");
+              location.reload();  // Recarrega a página após o sucesso
+            },
+            error: function(error) {
+              // Lógica de erro (se necessário)
+              console.error("Erro ao enviar o formulário:", error);
+            }
+          });
+        });
+    </script>
+  <script>
+    $(document).ready(function() {
+      $('#consultarCnpjBtn').click(function() {
+        var cnpj = $('#id_cnpj').val().replace(/[^0-9]/g, '');
+        if (cnpj.length == 14) {
+          $.ajax({
+            url: 'https://www.receitaws.com.br/v1/cnpj/' + cnpj,
+            dataType: 'jsonp',
+            success: function(data) {
+              $('#id_corporate_name').val(data.nome);
+              $('#id_name').val(data.fantasia);
+              $('#id_address').val(data.logradouro);
+              $('#id_phone').val(data.telefone);
+              $('#id_email').val(data.email);
+              $('#id_city').val(data.municipio);
+              $('#id_cep').val(data.cep);
+              $('#id_address_number').val(data.numero);
+              $('#id_address_complement').val(data.complemento);
+              $('#id_neighborhood').val(data.bairro);
+              $('#id_uf').val(data.uf);
+            },
+            error: function(error) {
+              console.error('Erro na consulta de CNPJ:', error);
+            }
+          });
+        } else {
+          alert('CNPJ inválido');
+        }
+      });
+    });
+  </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    openTab('dados');
+  });
+  function openTab(tabName) {
+    // Esconde todos os conteúdos
+    var tabContents = document.querySelectorAll('.tab-content');
+    tabContents.forEach(function (content) {
+      content.style.display = 'none';
+    });
+
+    // Mostra o conteúdo da aba clicada
+    document.getElementById(tabName).style.display = 'block';
+  }
+</script>
+<script>
+  $(document).ready(function () {
+      // Inicializa o Select2 para o campo solicitante
+      $('.select2').select2();
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      var clienteSelect = document.getElementById("id_solicitante");
+      var contatoSelect = document.getElementById("id_contato");
+
+      // Construir o mapa cliente-contato no formato {"cliente_id": ["contato1", "contato2", ...], ...}
+      var clienteContatoMap = {
+    {% for cliente in clientes %}
+        "{{ cliente.id }}": [
+            {% for contato in contatos %}
+                {% if cliente.id == contato.id_customer.id %}
+                "{{ contato }}",
+                {% endif %}
+            {% endfor %}
+        ],
+    {% endfor %}
+};
+
+      // Função para atualizar as opções de contato com base no cliente selecionado
+      function updateContatos() {
+            var clienteSelecionado = clienteSelect.value;
+        console.log("Cliente selecionado ID:", clienteSelecionado);
+
+        var contatosDoCliente = clienteContatoMap[clienteSelecionado] || [];
+        console.log("Contatos do cliente:", contatosDoCliente);
+
+          // Limpa as opções atuais
+          while (contatoSelect.firstChild) {
+              contatoSelect.removeChild(contatoSelect.firstChild);
+          }
+
+          // Adiciona as novas opções
+          contatosDoCliente.forEach(function (contato) {
+              var option = document.createElement("option");
+              option.text = contato;
+              option.value = contato;
+              contatoSelect.add(option);
+          });
+
+      }
+
+      // Adiciona um ouvinte de mudança ao campo de cliente
+      clienteSelect.addEventListener("change", updateContatos);
+
+      // Atualiza os contatos iniciais
+      updateContatos();
+  });
+</script>
+<script>
+  $(document).ready(function(){
+      // Adicionar campo de arquivo
+      $("#add-file").click(function(){
+          var fileInput = '{{ form_anexo.anexo }}';
+          $("#file-container").append(fileInput);
+      });
+  });
+</script>
+<script>
+  // Obtém o checkbox "Marcar Todos" e a lista de checkboxes
+  var marcarTodosCheckbox = document.getElementById('marcarTodos');
+  var checkboxes = document.getElementsByClassName('checkboxItem');
+
+  // Adiciona um ouvinte de eventos para o checkbox "Marcar Todos"
+  marcarTodosCheckbox.addEventListener('change', function() {
+    // Percorre todos os checkboxes na lista e os marca/desmarca conforme o estado do checkbox "Marcar Todos"
+    for (var i = 0; i < checkboxes.length; i++) {
+      checkboxes[i].checked = marcarTodosCheckbox.checked;
+    }
+  });
+
+  // Adiciona ouvintes de eventos para os outros checkboxes
+  for (var i = 0; i < checkboxes.length; i++) {
+    checkboxes[i].addEventListener('change', function() {
+      // Verifica se todos os outros checkboxes estão marcados e atualiza o estado do checkbox "Marcar Todos"
+      var todosMarcados = true;
+      for (var j = 0; j < checkboxes.length; j++) {
+        if (!checkboxes[j].checked) {
+          todosMarcados = false;
+          break;
+        }
+      }
+      marcarTodosCheckbox.checked = todosMarcados;
+    });
+  }
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Adicione um ouvinte de evento ao botão de envio
+    document.getElementById("enviarServicos").addEventListener("click", function() {
+      // Selecione todos os checkboxes marcados nas tabelas
+      var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+      
+      // Crie uma lista para armazenar os IDs dos itens selecionados
+      var ids = [];
+      
+      // Itere sobre os checkboxes marcados e armazene seus IDs na lista
+      checkboxes.forEach(function(checkbox) {
+        ids.push(checkbox.value);
+      });
+      
+      // Envie a lista de IDs ao servidor via AJAX
+      if (ids.length > 0) {
+        // Aqui você faria a requisição AJAX ao seu servidor Django
+        // Exemplo simplificado apenas para demonstração
+        fetch('/orcamento/orcamento/create/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            // Incluir cabeçalho CSRF se necessário
+            // 'X-CSRFToken': getCookie('csrftoken'),
+          },
+          body: JSON.stringify({ ids: ids }),
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Erro ao enviar dados ao servidor');
+          }
+          // Lidar com a resposta do servidor, se necessário
+          return response.json();
+        })
+        .then(data => {
+          // Lógica após o servidor responder, se necessário
+          console.log('Dados enviados com sucesso:', data);
+        })
+        .catch(error => {
+          console.error('Erro ao enviar dados ao servidor:', error);
+        });
+      } else {
+        console.log('Nenhum item selecionado.');
+      }
+    });
+  });
+  </script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Função para obter o cookie CSRF
+      function getCookie(name) {
+          var cookieValue = null;
+          if (document.cookie && document.cookie !== '') {
+              var cookies = document.cookie.split(';');
+              for (var i = 0; i < cookies.length; i++) {
+                  var cookie = cookies[i].trim();
+                  // Verifica se o cookie é o token CSRF
+                  if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                      cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                      break;
+                  }
+              }
+          }
+          return cookieValue;
+      }
+  
+      $('#id_solicitante').change(function() {
+        var clienteSelecionado = $(this).val();
+        var csrftoken = getCookie('csrftoken');
+        $.ajax({
+          url: '/orcamento/buscar_contatos/',
+          method: 'POST',
+          headers: {'X-CSRFToken': csrftoken},  
+          data: { cliente: clienteSelecionado },
+          success: function(data) {
+            $('#contato').empty();
+            $.each(data.contatos, function(index, contato) {
+              $('#contato').append($('<option>', {
+                value: contato.id,
+                text: contato.nome
+              }));
+            });
+          },
+          error: function(xhr, status, error) {
+            console.error('Erro ao buscar contatos:', error);
+          }
+        });
+      });
+    });
+  </script>
+{% endblock %}

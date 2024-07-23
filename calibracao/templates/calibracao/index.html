@@ -1,0 +1,227 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+<div class="row justify-content-center mt-4 py-4 mb-5">
+  <div class="col-12 col-xl-9">
+    <form action="#" method="post" class="card border-0 shadow p-3 pb-4 mb-4" id="calibration-form">
+      <div class="card-header mx-lg-4 p-0 py-3 py-lg-4 mb-4 mb-md-0">
+        <h3 class="h5 mb-0">Calibração</h3> 
+      </div>
+      <div class="card-body p-0 p-md-4">
+        {% csrf_token %} 
+        {% if not customer %}
+        <div class="row justify-content-center">
+          <div class="col-12"> 
+            <div class="form-group mb-4">
+              <label for="inputState">Orçamentos</label>
+              <select id="inputState" class="form-control" name="numero">
+                <option value="0" selected>Selecione o Orçamento...</option>
+                {% for item in orcamento %}
+                <option value="{{ item.id }}">{{ item.id }}</option>
+                {% endfor %}
+              </select>
+            </div> 
+          </div> 
+        </div>
+        {% endif %}
+        {% if customer %} 
+          {% if instruments %}
+            {% if not selected_instrument %}
+            <div class="col-12"> 
+              <div class="form-group mb-4">
+                <label for="instrumentSelect">Instrumento</label>
+                <select id="instrumentSelect" class="form-control" name="instrumentSelect">
+                  <option selected disabled>Selecione o instrumento...</option>
+                  {% for instrument in instruments %}
+                    <option value="{{ instrument.id }}">{{ instrument.peca_id }}</option>
+                  {% endfor %}
+                </select>
+              </div> 
+            </div>  
+            <input type="hidden" name="name" value="{{ customer.id }}">  
+            {% endif %}
+            {% if customer %} 
+                  <div class="row justify-content-between mb-2 mb-md-3">
+                    <div class="col-sm ">
+                      <h5 class="mb-3">Informações do Cliente</h5>
+                      <div> 
+                        <dl class="row text-sm-right ">
+                          <dt class="col-12"><strong>Cliente</strong>
+                          </dt>
+                          <dd class="col-12 mb-3">{{ customer.name }}</dd>
+                          <dt class="col-12"><strong>Endereço:</strong>
+                          </dt>
+                          <dd class="col-12 mb-3">{{ customer.address }}</dd>
+                          <dt class="col-12"><strong>Número do Endereço:</strong>
+                          </dt>
+                          <dd class="col-12 mb-3">{{ customer.address_number }}</dd>
+                          <dt class="col-12"><strong>Complemento do Endereço:</strong>
+                          </dt>
+                          <dd class="col-12 mb-3">{{ customer.address_complement }}</dd>
+                        </dl>
+                      </div>
+                    </div>  
+                    <div class="col-sm-5">
+                      <h5 class="mb-3">Informações do Instrumento</h5>
+                      <div>
+                        <dl class="row text-sm-right">
+                          <dt><strong>Código</strong>
+                          </dt>
+                          <dd class="mb-3">{{ selected_instrument.code }}</dd>
+                          <dt><strong>Nome:</strong>
+                          </dt>
+                          <dd>{{  selected_instrument.serial_number }}</dd> 
+                        </dl>
+                      </div> 
+                    </div> 
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="calculadora-tab" data-bs-toggle="tab" data-bs-target="#calculadora" type="button" role="tab" aria-controls="calculadora" aria-selected="true">Calculadora</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="resultados-tab" data-bs-toggle="tab" data-bs-target="#resultados" type="button" role="tab" aria-controls="resultados" aria-selected="false">Resultados</button>
+                      </li> 
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                      <div class="tab-pane fade show active" id="calculadora" role="tabpanel" aria-labelledby="calculadora-tab">
+                        <form method="POST" class="needs-validation mt-4" id="calculadora-form">
+                          {% csrf_token %}
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col">Número</th>
+                                <th scope="col">Valor</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for i in "123" %}
+                                <tr>
+                                  <td scope="row">Número {{ i }}</td>
+                                  <td><input type="text" name="numero{{ i }}" class="form-control"></td>
+                                </tr>
+                              {% endfor %}
+                            </tbody>
+                          </table>
+                          <br>
+                          <input type="hidden" name="name" value="{{ customer.id }}"> {# Retain the customer value #}
+                          <input type="hidden" name="instrumentSelect" value="{{ selected_instrument.id }}"> {# Retain the selected instrument value #}
+                          <button type="submit" class="btn btn-primary" id="calcular-btn">Calcular</button>
+                        </form> 
+                      </div>
+                      <div class="tab-pane fade" id="resultados" role="tabpanel" aria-labelledby="resultados-tab">
+                        {% if resultados %} 
+                        <div class="table-responsive mt-4">
+                          <table class="table table-striped mb-4">
+                            <thead>
+                              <tr>
+                                <th>Descrição</th>
+                                <th>Valor</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>Valores informados</td>
+                                <td>{{ numeres }}</td>
+                              </tr>
+                              <tr>
+                                <td>Média</td>
+                                <td>{{ resultados.media }}</td>
+                              </tr>
+                              <tr>
+                                <td>Desvio padrão da amostra</td>
+                                <td>{{ resultados.desvio_padrao_amostra }}</td>
+                              </tr>
+                              <tr>
+                                <td>Incerteza</td>
+                                <td>{{ resultados.incerteza }}</td>
+                              </tr>
+                              <tr>
+                                <td>Incerteza menor</td>
+                                <td>{{ resultados.incerteza_menor }}</td>
+                              </tr>
+                              <tr>
+                                <td>Tendência</td>
+                                <td>{{ resultados.tendencia }}</td>
+                              </tr>
+                              <tr>
+                                <td>Incerteza do padrão up</td>
+                                <td>{{ resultados.incerteza_padrao_up }}</td>
+                              </tr>
+                              <tr>
+                                <td>Incerteza combinada</td>
+                                <td>{{ resultados.incerteza_combinada }}</td>
+                              </tr>
+                              <tr>
+                                <td>Grau de Liberdade veff</td>
+                                <td>{{ resultados.grau_de_liberdade_veff }}</td>
+                              </tr>
+                              <tr>
+                                <td>Fator de Abrangencia 95,45%</td>
+                                <td>{{ resultados.fator_de_abrangencia9045 }}</td>
+                              </tr>
+                              <tr>
+                                <td>Incerteza expandida</td>
+                                <td>{{ resultados.incerteza_expandida }}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <form method="POST" action="{% url 'gerar_pdf' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="customer.name" value="{{ customer.name }}">
+                            <input type="hidden" name="customer.address" value="{{ customer.address }}">
+                            <input type="hidden" name="customer.address_number" value="{{ customer.address_number }}">
+                            <input type="hidden" name="customer.address_complement" value="{{ customer.address_complement }}">
+                            <input type="hidden" name="selected_instrument.code" value="{{ selected_instrument.code }}">
+                            <input type="hidden" name="selected_instrument.serial_number" value="{{ selected_instrument.serial_number }}">
+                            <input type="hidden" name="numeres" value="{{ numeres }}">
+                            <input type="hidden" name="resultados.media" value="{{ resultados.media }}">
+                            <input type="hidden" name="resultados.desvio_padrao_amostra" value="{{ resultados.desvio_padrao_amostra }}">
+                            <input type="hidden" name="resultados.incerteza_menor" value="{{ resultados.incerteza_menor }}">
+                            <input type="hidden" name="resultados.tendencia" value="{{ resultados.tendencia }}">
+                            <input type="hidden" name="resultados.incerteza_padrao_up" value="{{ resultados.incerteza_padrao_up }}">
+                            <input type="hidden" name="resultados.incerteza_combinada" value="{{ resultados.incerteza_combinada }}">
+                            <input type="hidden" name="resultados.grau_de_liberdade_veff" value="{{ resultados.grau_de_liberdade_veff }}">
+                            <input type="hidden" name="resultados.fator_de_abrangencia9045" value="{{ resultados.fator_de_abrangencia9045 }}">
+                            <input type="hidden" name="resultados.incerteza_expandida" value="{{ resultados.incerteza_expandida }}">
+                      
+                            <button type="submit" class="btn btn-primary">Gerar Certificado</button>
+                          </form>
+                        </div> 
+                        {% endif %}
+                      </div> 
+                    </div>  
+                  </div>   
+                {% endif %}  
+              {% endif %} 
+            {% endif %}
+            {% if not selected_instrument or not customer %}
+            <div class="col-12 mt-2">
+              <button type="submit" class="btn btn-gray-800 mt-2 animate-up-2" id="continue-btn">Continuar</button>
+            </div>
+            {% endif %}
+          </form>
+        </div>
+      </div>
+      
+      <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const instrumentSelect = document.getElementById("instrumentSelect");
+        const continueBtn = document.getElementById("continue-btn");
+      
+        continueBtn.addEventListener("click", function(event) {
+          // Obtém o valor selecionado de instrumentSelect
+          const selectedValue = instrumentSelect.value;
+      
+          // Define o valor em um campo de entrada oculto
+          const hiddenInput = document.createElement("input");
+          hiddenInput.type = "hidden";
+          hiddenInput.name = "instrumentSelect";
+          hiddenInput.value = selectedValue;
+      
+          // Anexa o campo de entrada oculto ao formulário
+          const form = document.getElementById("calibration-form");
+          form.appendChild(hiddenInput);
+        });
+      });
+      </script>
+      
+      {% endblock %}

@@ -1,0 +1,43 @@
+<!-- multiple_file_input.html -->
+{% if widget.initial %}
+    {% for file in widget.initial %}
+        <div class="input-group mb-3">
+            <div class="custom-file">
+                <input type="file" name="{{ widget.name }}" class="custom-file-input" id="{{ widget.id_for_label }}_{{ forloop.counter }}" {% include "django/forms/widgets/attrs.html" %}>
+                <label class="custom-file-label" for="{{ widget.id_for_label }}_{{ forloop.counter }}">{{ file.name }}</label>
+            </div>
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary remove-input" type="button">×</button>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+<div class="input-group mb-3">
+    <div class="custom-file">
+        <input type="file" name="{{ widget.name }}" class="custom-file-input" id="{{ widget.id_for_label }}">
+        <label class="custom-file-label" for="{{ widget.id_for_label }}">Escolha arquivos</label>
+    </div>
+    <div class="input-group-append">
+        <button class="btn btn-outline-secondary add-input" type="button">+</button>
+    </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll('.add-input').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var container = button.closest('.multiple-file-input-container');
+            var input = container.querySelector('.custom-file');
+            var clone = input.cloneNode(true);
+            input.parentNode.insertBefore(clone, input.nextSibling);
+        });
+    });
+
+    document.querySelectorAll('.remove-input').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var container = button.closest('.multiple-file-input-container');
+            var input = button.closest('.custom-file');
+            input.remove();
+        });
+    });
+});
+</script>

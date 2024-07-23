@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block nome %}{{cliente.nome}}{% endblock %}
+
+{% block content %}
+
+<a id="add-link" href="novo_contato">
+  <div class="col-2 add-div">
+      <i class="fas fa-plus"></i> Adicionar contato
+  </div>
+</a>
+
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Contato</th>
+      <th scope="col">Telefone</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for contato in contatos %}      
+        <tr>
+            <td><span><a href="{{contato.id}}">{{contato.name}}</a></span></td>
+            <td>{{contato.commercial_phone}}</td>
+            <td><a href="edit/{{contato.id}}"><span><i class="fas fa-edit"></i></span></td>
+            <td><a href="delete/{{contato.id}}" class="delete-btn"><span><i class="fas fa-trash"></i></span></a></td>
+        </tr>            
+    {% endfor %}
+
+  </tbody>
+</table>
+{% endblock %}

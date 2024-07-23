@@ -1,0 +1,137 @@
+{% extends 'layouts/base.html' %}
+{% load static %} 
+{% block content %}  
+
+<div class="d-flex justify-content-between align-items-center  mt-4 py-4">
+  <h4>{{ cliente.name }}</h4>  
+</div> 
+<div class="row">
+  <div class="mb-5">
+    <div class="card border-0 shadow components-section">
+      <div class="card-body">
+        <div class="accordion accordion-flush" id="accordionFlushExample">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-headingOne">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                Informações do Cliente
+              </button>
+            </h2>
+            <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+              <div class="accordion-body">
+                <div class="row"> 
+                  {% for field in form %}
+                  <div class="col-lg-4 col-sm-6">
+                    <div class="form-group mb-4">
+                      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                      {{ field }}
+                    </div>
+                  </div>
+                  {% endfor %} 
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-headingTwo">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                Contatos do Cliente
+              </button>
+            </h2>
+            <div id="flush-collapseTwo" class="accordion-collapse collapse show" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+              <div class="accordion-body">
+                <a id="add-link" href="{{cliente.id}}/new_contact" class="btn btn-gray-800 mb-4">
+                  <i class="fas fa-plus px-1"></i> Adicionar contatos
+                </a>    
+                {% if messages %}
+                  {% for message in messages %}
+                  <div class="alert alert-danger alert-dismissible mt-2">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> 
+                      <span class="error-message">{{ message }}</span> 
+                  </div>
+                  {% endfor %}
+                {% endif %}          
+                <div class="table-responsive">
+                  <table class="table table-hover">   
+                    <thead>
+                      <tr>
+                        <th class="border-gray-200">Nome</th>
+                        <th class="border-gray-200">CPF</th> 
+                        <th class="border-gray-200">Setor</th> 
+                        <th class="border-gray-200">E-mail</th> 
+                        <th class="border-gray-200">Telefone comercial</th> 
+                        <th class="border-gray-200">Celular</th> 
+                        <th class="border-gray-200">Descrição</th> 
+                        <th class="border-gray-200">Ação</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for contato in contatos %}      
+                        <tr>
+                            <td class="text-wrap" style="max-width:300px"><span class="fw-bolder text-gray-500">{{contato.name}}</span></td>
+                            <td><span class="fw-normal">{% if contato.cpf == '000.000.000-00' %} Nenhum {% else %} {{contato.cpf}} {% endif %}</span></td>
+                            <td><span class="fw-normal">{{contato.sector}}</span></td>
+                            <td><span class="fw-normal">{{contato.email}}</span></td>
+                            <td><span class="fw-normal">{{contato.commercial_phone}}</span></td>
+                            <td ><span class="fw-normal">{{contato.cellular}}</span></td>
+                            <td class="text-wrap" style="max-width:300px">
+                              <span class="fw-normal">{{contato.description}}</span>
+                            </td> 
+                            <td class="position-static">
+                              <div class="btn-group">
+                                <button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-0"
+                                  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <span class="icon icon-sm">
+                                    <span class="fas fa-ellipsis-h icon-dark"></span>
+                                  </span>
+                                  <span class="visually-hidden">Toggle Dropdown</span>
+                                </button>
+                                <div class="dropdown-menu py-0"> 
+                                  <a class="dropdown-item" href="/cliente/{{ cliente.id }}/{{ contato.id }}/edit">
+                                    <span class="fas fa-edit me-2"></span>Editar
+                                  </a>
+                                  <a class="dropdown-item text-danger rounded-bottom" href="#" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ cliente.id }}{{ contato.id }}"><span class="fas fa-trash-alt me-2" ></span>Deletar</a>
+                                </div>
+                              </div>
+                            </td> 
+                        </tr>
+                        <div class="modal fade" id="confirmDeleteModal{{ cliente.id }}{{ contato.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Confirmação de Exclusão</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                <p>Tem certeza que deseja deletar o contato {{contato.name}} do cliente {{ cliente.name }}?</p>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <a href="/cliente/{{ cliente.id }}/delete/{{ contato.id }}" class="btn btn-danger">Deletar</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>            
+                      {% endfor %}
+                    </tbody> 
+                  </table>
+                </div> 
+              </div>
+            </div>
+          </div> 
+        </div> 
+      </div>
+    </div>
+  </div>
+</div> 
+{% block script %}
+  <script>
+    let fields = document.querySelectorAll('.form-control');
+    for (let i = 0; i < fields.length; i++) {
+      fields[i].disabled = true;
+    }
+  </script>
+{% endblock script %}
+
+{% endblock content %}
+
+

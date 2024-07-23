@@ -1,0 +1,91 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+<div class="d-block mb-4 mb-md-0 py-4 "> 
+  <h4>Instrumentos</h4> 
+</div>  
+
+<div class="form-group d-flex justify-content-end ">  
+  <a href="/instruments/tipocreate" class="btn btn-gray-800 my-3 ms-3">
+    <i class="fas fa-plus px-1"></i> Tipo de instrumento
+  </a>
+  <a href="/instruments/createmodel" class="btn btn-gray-800 my-3 ms-3">
+    <i class="fas fa-plus px-1"></i> Modelo de instrumento
+  </a>
+  <a href="{% url 'cadastro_instrumento'%}" class="btn btn-gray-800 my-3 ms-3">
+    <i class="fas fa-plus px-1"></i> Instrumento
+  </a>
+</div>  
+<div class="row">
+  <div class="mb-5">
+    <div class="card border-0 shadow components-section">
+      {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-success alert-dismissible mt-2">
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> 
+            <span class="error-message">{{ message }}</span> 
+        </div>
+        {% endfor %}
+      {% endif %} 
+      <div class="card-body table-responsive">
+        <div class="row"> 
+          <form method="GET" action="{% url 'instrumentos' %}">
+            {% csrf_token %} 
+              <div class="form-group "> 
+                <select id="inputState" class="form-control" name="name">
+                  <option value="" selected disabled>Selecione um cliente...</option>
+                  {% for customer in customers %}
+                    <option value="{{ customer.id }}">{{ customer.name }}</option>
+                  {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-primary mt-4">Selecionar</button>
+              </div>  
+          </form>
+        </div>     
+        <h5 class="text-title mt-4">{{ selected_customer_name }}</h5>
+        <table class="table table-hover mt-4">
+          <thead>
+            <tr>
+              <th class="border-gray-200">Código</th>
+              <th class="border-gray-200">Descrição</th>
+              <th class="border-gray-200">Número de Série</th> 
+            </tr>
+          </thead>
+          <tbody>
+            {% if instruments %}
+              {% for instrument in instruments %}
+              <tr>
+                <td>{{ instrument.code }}</td>
+                <td>{{ instrument.description }}</td>
+                <td>{{ instrument.serial_number }}</td>
+              </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="3" class="text-center">Não há instrumentos disponíveis.</td>
+              </tr>
+            {% endif %}
+          </tbody> 
+        </table> 
+        <div class="card-footer px-3 border-0 d-flex flex-column flex-lg-row align-items-center justify-content-between">
+          <ul class="pagination">
+            {% if instruments.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">&laquo;Primeiro</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ instruments.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Anterior</a></li>
+            {% endif %} 
+            {% if instruments.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ instruments.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Próximo</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ instruments.paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Último&raquo;</a></li>
+            {% endif %}
+          </ul>
+          <div class="fw-normal small mt-4 mt-lg-0">
+            Exibindo <b>{{ instruments.start_index }}</b> a <b>{{ instruments.end_index }}</b> de <b>{{ instruments.paginator.count }}</b> entradas
+          </div>
+        </div> 
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

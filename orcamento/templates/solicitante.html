@@ -1,0 +1,315 @@
+{% extends 'layouts/base.html' %}
+{% load static %} 
+{% block content %}  
+
+<div class="d-block mb-4 mb-md-0 py-4 "> 
+  <h4>Solicitante</h4> 
+</div>   
+<div class="row">
+  <div class="row">
+    <div class="mb-5">
+      <div class="card border-0 shadow components-section">
+        <div class="card-body">
+          {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-success alert-dismissible mt-2">
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> 
+                <span class="error-message">{{ message }}</span> 
+            </div>
+            {% endfor %}
+          {% endif %}
+          
+          {% if not selected_customer %}
+          <form method="get"> 
+            <div class="row justify-content-center">
+              <div class="col-12"> 
+                  <div class="form-group mb-4">
+                    <label for="inputState">Cliente <button style="position: relative;" id="modalOpen1" class="btn btn-primary" type="button" data-toggle="modal" data-target="#clienteModal"><i class="fas fa-plus"></i></button></label>
+                    <select id="inputState" class="form-control" name="id_customer">  <!-- Fix the name attribute -->
+                      <option value=0 selected>Selecione o cliente...</option>
+                      {% for customer in customers %}
+                      <option value="{{ customer.id }}">{{ customer.name }}</option>
+                      {% endfor %}
+                    </select>
+                  </div> 
+                  
+              </div> 
+              <div class="col-12 mt-2">
+                <button class="btn btn-gray-800 mt-2 animate-up-2" type="submit">Continuar</button>
+                <a href="{% url 'consultar_empresa' %}" class="btn btn-gray-800 my-3">
+                  <i class="fas fa-plus px-1"></i> Cadastrar Clientes
+                </a>
+              </div>
+            </div>
+          </form>
+          {% endif %}
+          {% if selected_customer %}  
+          <form method="post" > 
+            <div class="row py-4">
+              {% csrf_token %}   
+              <div class="col-lg-6 col-sm-6"> 
+                <div class="form-group mb-4">
+                  <label for="inputContact">Solicitante <button style="position: relative; z-index: -5;" class="btn btn-primary" type="button"><i class="fas ssssfa-plus"></i></button></label>
+                  <select id="inputContact" class="form-control" name="solicitante" {% if selected_customer %}readonly{% endif %}>  
+                    <option value="{{ selected_customer.id }}">{{ selected_customer.name }}</option> 
+                  </select>
+                </div> 
+              </div> 
+              <div class="col-lg-6 col-sm-6"> 
+                <div class="form-group mb-4">
+                  <label for="inputContact">Contato   <button style="position: relative;" id="modalOpen" class="btn btn-primary" type="button" data-toggle="modal" data-target="#contatoModal"><i class="fas fa-plus"></i></button>
+                  </label>
+                  
+                  <select id="inputContact" class="form-control" name="contato">
+                    <option value="0" selected>Selecione o contato...</option>
+                    {% for contact in selected_contacts %}
+                    <option value="{{ contact.id }}">{{ contact.name }} | {{ contact.email }}</option>
+                    {% endfor %}
+                  </select>
+                  {% if form.contato.errors %}
+                    <div class="alert alert-danger alert-dismissible mt-2">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        {% for error in form.contato.errors %}
+                        <span class="error-message">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                  {% endif %}
+                  
+
+                </div> 
+
+                </div>
+                
+              </div>    
+              <div class="form-group d-flex justify-content-end ">  
+                <button class="btn btn-gray-800 mt-2 animate-up-2" type="submit">Continuar</button>
+              </div> 
+            </div>
+          </form>  
+          {% endif %}  
+        </div>
+      </div>
+    </div>
+  </div>
+</div>  
+<!--novo contato-->
+<div class="modal fade" id="contatoModal" tabindex="-1" role="dialog" aria-labelledby="contatoModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="contatoModalLabel">Novo Contato</h5>
+              
+          </div>
+          <div class="modal-body">
+           {% if selected_customer.id %}
+            <form method="post" action="{% url 'new-contact' selected_customer.id %}" id="contatoForm">
+              {% csrf_token %}   
+              {% for field in form_contato %}
+              <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}:            {% if field.name == 'cnpj' %}
+                 <button class="btn btn-primary" type="button" id="consultarCnpjBtn">Consultar empresa</button>{% endif %}</label>
+                {{ field }}
+            </div>
+            {% endfor %}
+              <br>
+              <button type="submit" class="btn btn-primary">Enviar</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" id="modalClose">Fechar</button>
+          </form>
+          {% endif %}
+          </div>
+      </div>
+  </div>
+</div>
+<!--novo cliente-->
+<div class="modal fade" id="clienteModal" tabindex="-1" role="dialog" aria-labelledby="clienteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="clienteModalLabel">Novo Cliente</h5>
+              
+          </div>
+          <div class="modal-body">
+            <form method="post" id="clienteForm">
+              {% csrf_token %}   
+              {% for field in form_cliente %}
+              <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}:            {% if field.name == 'cnpj' %}
+                 <button class="btn btn-primary" type="button" id="consultarCnpjBtn">Consultar empresa</button>{% endif %}</label>
+                {{ field }}
+            </div>
+            {% endfor %}
+              <br>
+              <button type="submit" class="btn btn-primary">Enviar</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" id="modalClose1">Fechar</button>
+          </form>
+          </div>
+      </div>
+  </div>
+</div>
+<!-- Inclua o Bootstrap (inclui o jQuery e o Popper.js) -->
+
+<script src="https://code.jquery.com/jquery-3.6.4.slim.min.js" integrity="sha384-m/qXs6Ta64ootdh3VSJsg0sw+LJ/eUdVto+qns9kekovxhjr8qMK/9UvaO0iXgg7" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+<!-- script modal client -->
+<script>
+  $(document).ready(function() {
+    $('#modalOpen1').click(function() {
+      console.log("Clicou no botão");
+      $('#clienteModal').modal('show');
+    });
+  });
+  $(document).ready(function() {
+    $('#modalClose1').click(function() {
+      console.log("Clicou no botão");
+      $('#clienteModal').modal('hide');
+    });
+  });
+      // Adicionando manipulador para o envio do formulário
+      $('#clienteForm').submit(function(e) {
+        e.preventDefault();  // Impede o envio padrão do formulário
+
+      // Lógica para validar o formulário, se necessário
+      // ...
+
+      // Enviar uma solicitação AJAX para a view do Django
+      $.ajax({
+        url: $(this).attr('action'),
+        type: 'POST',
+        data: $(this).serialize(),
+        success: function(response) {
+          console.log(response)
+          // Lógica de sucesso (se necessário)
+          console.log("Formulário enviado com sucesso!");
+           // Recarrega a página após o sucesso
+           location.reload();
+        },
+        error: function(error) {
+          console.log(error)
+          // Lógica de erro (se necessário)
+          console.error("Erro ao enviar o formulário:", error);
+        }
+      });
+    });
+</script>
+<!-- script modal contato -->
+<script>
+  $(document).ready(function() {
+    $('#modalOpen').click(function() {
+      console.log("Clicou no botão");
+      $('#contatoModal').modal('show');
+    });
+  });
+
+  $(document).ready(function() {
+    $('#modalClose').click(function() {
+      console.log("Clicou no botão");
+      $('#contatoModal').modal('hide');
+    });
+
+    // Adicionando manipulador para o envio do formulário
+    $('#contatoForm').submit(function(e) {
+      e.preventDefault();  // Impede o envio padrão do formulário
+
+      // Lógica para validar o formulário, se necessário
+      // ...
+
+      // Salvar uma referência ao formulário para ser utilizado dentro do bloco success
+      var formulario = $(this);
+
+      // Enviar uma solicitação AJAX para a view do Django
+      $.ajax({
+        url: formulario.attr('action'),
+        type: 'POST',
+        data: formulario.serialize(),
+        success: function(response) {
+          // Lógica de sucesso (se necessário)
+          console.log("Formulário enviado com sucesso!");
+
+          // Atualizar manualmente as informações do banco na página
+          carregarInformacoesDoBanco();
+          // Atualizar o conteúdo do select com base nas informações retornadas
+          atualizarContatosSelect(response);
+
+          // Fechar o modal
+          $('#contatoModal').modal('hide');
+        },
+        error: function(error) {
+          // Lógica de erro (se necessário)
+          console.error("Erro ao enviar o formulário:", error);
+        }
+      });
+    });
+  });
+
+  // Função para carregar informações do banco sem recarregar a página
+  function carregarInformacoesDoBanco() {
+    $.ajax({
+      url: '/buscar_informacoes_banco/',  // Substitua pelo caminho correto
+      type: 'GET',  // Use o método GET para buscar informações
+      success: function(response) {
+        // Lógica para manipular a resposta do servidor e atualizar as informações na página
+        console.log("Informações do banco carregadas com sucesso:", response);
+
+        // Atualizar manualmente as informações na página com base na resposta
+        // ...
+      },
+      error: function(error) {
+        console.error("Erro ao carregar informações do banco:", error);
+      }
+    });
+  }
+
+  // Função para atualizar o conteúdo do select de contatos
+function atualizarContatosSelect(contatos) {
+  var selectContatos = $('#inputContact');
+
+  // Limpar opções existentes, exceto a primeira (índice 0)
+  selectContatos.find('option:not(:first)').remove();
+
+  // Adicionar as opções com base nas informações retornadas
+  for (var i = 0; i < contatos.length; i++) {
+    var contato = contatos[i];
+    selectContatos.append('<option value="' + contato.id + '">' + contato.name + ' | ' + contato.email + '</option>');
+  }
+}
+
+</script>
+
+
+<script>
+  $(document).ready(function() {
+    $('#consultarCnpjBtn').click(function() {
+      var cnpj = $('#id_cnpj').val().replace(/[^0-9]/g, '');
+      if (cnpj.length == 14) {
+        $.ajax({
+          url: 'https://www.receitaws.com.br/v1/cnpj/' + cnpj,
+          dataType: 'jsonp',
+          success: function(data) {
+            $('#id_corporate_name').val(data.nome);
+            $('#id_name').val(data.fantasia);
+            $('#id_address').val(data.logradouro);
+            $('#id_phone').val(data.telefone);
+            $('#id_email').val(data.email);
+            $('#id_city').val(data.municipio);
+            $('#id_cep').val(data.cep);
+            $('#id_address_number').val(data.numero);
+            $('#id_address_complement').val(data.complemento);
+            $('#id_neighborhood').val(data.bairro);
+            $('#id_uf').val(data.uf);
+          },
+          error: function(error) {
+            console.error('Erro na consulta de CNPJ:', error);
+          }
+        });
+      } else {
+        alert('CNPJ inválido');
+      }
+    });
+  });
+</script>
+
+
+{% endblock content %}
+
+

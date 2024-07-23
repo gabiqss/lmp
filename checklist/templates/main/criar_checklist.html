@@ -1,0 +1,122 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="d-block mb-4 mb-md-0 py-4 "> 
+  <h4>Cadastrar Checklist</h4> 
+</div>  
+<div class="card card-body border-0 shadow mb-5">   
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+
+      <div id="extra_fields">
+        <!-- Dynamically added fields will be inserted here -->
+      </div> 
+      <div class="form-group d-flex justify-content-end "> 
+        <button type="button" id="add_field_button" class="btn btn-outline-primary mx-3 mt-5"> <i class="fas fa-plus px-1"></i> Adicionar Campo</button> 
+        <button class="btn btn-primary mt-5" type="submit">Cadastrar</button>
+      </div>  
+    </form> 
+</div> 
+
+{% block script %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("form");
+    const extraFields = document.querySelector("#extra_fields");
+    const addFieldButton = document.querySelector("#add_field_button");
+    let fieldCounter = 0;
+
+    function addRemoveButton(container, fieldCounter) {
+      const removeButton = document.createElement("button");
+      removeButton.textContent = "Remover Campo";
+      removeButton.classList.add("btn", "btn-danger", "my-3"); // Adicionando as classes ao botão
+      removeButton.addEventListener("click", function () {
+        container.remove();
+      });
+      container.appendChild(removeButton);
+    }
+
+    addFieldButton.addEventListener("click", function () {
+      const field = `
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="id_tipo_${fieldCounter}">Tipo:</label>
+            <select name="tipo_${fieldCounter}" id="id_tipo_${fieldCounter}" class="form-control">
+              <option value="texto">Texto</option>
+              <option value="numero">Número</option>
+              <option value="opcoes">Opções</option>
+            </select>
+          </div>
+        </div>  
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="id_descricao_${fieldCounter}">Descrição:</label>
+            <textarea name="descricao_${fieldCounter}" id="id_descricao_${fieldCounter}" class="form-control" rows="1"></textarea>
+          </div>
+        </div>
+        
+        <div id="informacao_${fieldCounter}" >
+          <!-- Fields for additional input based on type -->
+        </div>
+      </div>
+      
+      `;
+      const fieldContainer = document.createElement("div");
+      fieldContainer.innerHTML = field;
+      extraFields.appendChild(fieldContainer);
+
+      addRemoveButton(fieldContainer, fieldCounter);
+      const informacaoDiv = fieldContainer.querySelector(`#informacao_${fieldCounter}`);
+      const selectElement = fieldContainer.querySelector(`#id_tipo_${fieldCounter}`);
+      updateInformacaoOptions(selectElement, informacaoDiv); // To update existing dynamic fields
+      fieldCounter++;
+    });
+
+    function updateInformacaoOptions(selectElement, informacaoDiv) {
+      const selectedTipo = selectElement.value;
+      if (selectedTipo === "numero") {
+          informacaoDiv.innerHTML = `
+              <select name="informacao_${fieldCounter - 1}">
+                  <option value="menor">Menor</option>
+                  <option value="igual">Igual</option>
+                  <option value="maior">Maior</option>
+                  <option value="nominal">Nominal</option>
+              </select>
+          `;
+        } else if (selectedTipo === "opcoes") {
+          informacaoDiv.innerHTML = `
+          <div class="row mt-4">
+
+            <div class="col-md-6">
+              <div class="form-group"> 
+                <input  class="form-control" type="text" name="opcoes_${fieldCounter - 1}[]" placeholder="Opção 1">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group"> 
+                <input  class="form-control" type="text" name="opcoes_${fieldCounter - 1}[]" placeholder="Opção 2">
+              </div>
+            </div> 
+          </div>
+          `;
+      } else {
+          informacaoDiv.innerHTML = "";  // Limpar campo anterior, caso exista
+      }
+  }
+  
+    extraFields.addEventListener("change", function(event) {
+        const target = event.target;
+        if (target.matches("select[name^='tipo_']")) {
+            const informacaoDiv = document.querySelector(`#informacao_${target.name.split("_")[1]}`);
+            updateInformacaoOptions(target, informacaoDiv);
+        }
+    });
+  });
+</script>
+{% endblock script%}
+
+{% endblock %} 

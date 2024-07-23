@@ -1,0 +1,145 @@
+{% extends 'layouts/base.html' %}
+{% load static %} 
+{% block content %}
+<div class="d-block mb-4 mb-md-0 py-4 "> 
+  <h4>Clientes</h4> 
+</div>   
+<div class="d-flex justify-content-between align-items-center flex-wrap mb-3"> 
+  <div class="col-12 col-md-6 col-lg-4">
+      <div class="input-group input-group-with-space">          
+        <input id="searchInput" name="search" class="form-control select2" placeholder="Pesquisar" aria-label="Pesquisar">
+        <button id="searchButton" class="btn btn-primary" type="button"><i class="fas fa-search"></i></button>
+      </div>
+  </div>
+  <a href="{% url 'consultar_empresa' %}" class="btn btn-gray-800 my-3">
+      <i class="fas fa-plus px-1"></i> Cadastrar Clientes
+  </a>  
+</div> 
+<div class="card card-body border-0 shadow table-wrapper table-responsive mb-5">
+  {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible mt-2">
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> 
+        <span class="error-message">{{ message }}</span> 
+    </div>
+    {% endfor %}
+  {% endif %} 
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th class="border-gray-200">Cliente</th>
+        <th class="border-gray-200">CNPJ / CPF</th>
+        <th class="border-gray-200">Telefone</th>
+        <th class="border-gray-200">Email</th>
+        <th class="border-gray-200">Endereço</th>
+        <!-- <th class="border-gray-200">Ação</th> -->
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in page_obj %}
+      <tr>
+        <td class="text-wrap">
+          <div class="btn-group">
+            <button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-0"
+              data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="fw-bolder text-gray-500">
+                <span>{{i.name}}</span>
+              </span>
+              <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu py-0 dropdown-menu-right">
+              <a class="dropdown-item rounded-top" href="/cliente/{{i.id}}" ><span class="fas fa-eye me-2"></span>Ver detalhes</a>
+              <a class="dropdown-item" href="/cliente/{{i.id}}/new_contact" ><span class="fas fa-plus me-2"></span>Adicionar contatos</a>
+              <a class="dropdown-item" href="/cliente/{{i.id}}/edit" ><span class="fas fa-edit me-2"></span>Editar</a>
+              <a class="dropdown-item text-danger rounded-bottom" href="#" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ i.id }}">
+                <span class="fas fa-trash-alt me-2"></span>Deletar
+            </a>
+            </div>
+          </div>          
+        </td>
+        <td><span class="fw-normal">{% if i.cpf %} {{i.cpf}} {% else %} {{i.cnpj}} {% endif %}</span></td>
+        <td><span class="fw-normal">{{i.phone}}</span></td>
+        <td><span class="fw-normal">{{i.email}}</span></td>
+        <td><span class="fw-normal">{{i.address}}</span></td>
+        <!-- <td>
+          <div class="btn-group">
+            <button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-0"
+              data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="icon icon-sm">
+                <span class="fas fa-ellipsis-h icon-dark"></span>
+              </span>
+              <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu py-0 dropdown-menu-right">
+              <a class="dropdown-item rounded-top" href="/cliente/{{i.id}}" ><span class="fas fa-eye me-2"></span>Ver detalhes</a>
+              <a class="dropdown-item" href="/cliente/{{i.id}}/new_contact" ><span class="fas fa-plus me-2"></span>Adicionar contatos</a>
+              <a class="dropdown-item" href="/cliente/{{i.id}}/edit" ><span class="fas fa-edit me-2"></span>Editar</a>
+              <a class="dropdown-item text-danger rounded-bottom" href="#" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal{{ i.id }}">
+                <span class="fas fa-trash-alt me-2"></span>Deletar
+            </a>
+            </div>
+          </div>
+        </td> -->
+      </tr>
+      <div class="modal fade" id="confirmDeleteModal{{ i.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Confirmação de Exclusão</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Tem certeza que deseja deletar o cliente {{ i.name }}?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <a href="delete/{{ i.id }}" class="btn btn-danger">Deletar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </tbody>
+  </table>   
+  <p id="noResultsMessage" class="text-center mt-4" style="display: none;">Nenhum resultado encontrado.</p>
+  <div class="card-footer px-3 border-0 d-flex flex-column flex-lg-row align-items-center justify-content-between">
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+      <li class="page-item"><a class="page-link" href="?page=1">&laquo;Primeiro</a></li>
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a></li>
+      {% endif %} 
+      {% if page_obj.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Próximo</a></li>
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Último&raquo;</a></li>
+      {% endif %}
+    </ul>
+    <div class="fw-normal small mt-4 mt-lg-0">
+      Exibindo <b>{{ page_obj.start_index }}</b> a <b>{{ page_obj.end_index }}</b> de <b>{{ page_obj.paginator.count }}</b> entradas
+    </div>
+  </div>
+</div>
+
+<!-- Inclua o JS do jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Inclua o JS do Select2 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+      var customers = [
+          {% for i in page_obj %}
+              { id: "{{ i.name|escapejs }}", text: "{{ i.name|escapejs }}" },
+          {% endfor %}
+      ];
+
+      $('#').select2({
+          data: customers,
+          tags: true,
+          placeholder: 'Pesquisar',
+          allowClear: true,  // Permite limpar o campo
+      });
+  });
+</script>
+
+{% endblock content %}

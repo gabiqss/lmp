@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block nome %}{{ cliente.nome }}{% endblock %}
+
+{% block content %}
+
+<style>
+    .form-field input[type="text"],
+    .form-field input[type="date"],
+    .form-field textarea {
+        width: 100%;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    .form-field button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .form-field button:hover {
+        background-color: #0069d9;
+    }
+
+    main {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .form-field-row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+    }
+
+    .form-field-row .form-field {
+        width: 25%;
+        padding-right: 10px;
+    }
+
+    @media (max-width: 768px) {
+        .form-field-row .form-field {
+            width: 50%;
+        }
+    }
+</style>
+<div>
+    <a href="{{ cliente.id }}/contatos" class="btn btn-primary">Contatos</a>
+</div>
+<h1>{{ cliente.name }}</h1>
+<form method="post" class=>
+    <div class="form-group">
+        {% csrf_token %}
+        <div class="form-field-row">
+            <div class="form-field">
+                {{ form.name.label_tag }}
+                {{ form.name }}
+            </div>
+            <div class="form-field">
+                {{ form.cnpj.label_tag }}
+                {{ form.cnpj }}
+            </div>
+            <div class="form-field">
+                {{ form.phone.label_tag }}
+                {{ form.phone }}
+            </div>
+            <div class="form-field">
+                {{ form.email.label_tag }}
+                {{ form.email }}
+            </div>
+        </div>
+        <div class="form-field-row">
+            <div class="form-field">
+                {{ form.corporate_name.label_tag }}
+                {{ form.corporate_name }}
+            </div>
+            <div class="form-field">
+                {{ form.municipal_registration.label_tag }}
+                {{ form.municipal_registration }}
+            </div>
+            <div class="form-field">
+                {{ form.state_registration.label_tag }}
+                {{ form.state_registration }}
+            </div>
+            <div class="form-field">
+                {{ form.address.label_tag }}
+                {{ form.address }}
+            </div>
+        </div>
+        <div class="form-field-row">
+            <div class="form-field">
+                {{ form.city.label_tag }}
+                {{ form.city }}
+            </div>
+            <div class="form-field">
+                {{ form.uf.label_tag }}
+                {{ form.uf }}
+            </div>
+            <div class="form-field">
+                {{ form.cep.label_tag }}
+                {{ form.cep }}
+            </div>
+            <div class="form-field">
+                {{ form.description.label_tag }}
+                {{ form.description }}
+            </div>
+        </div>
+        <div class="form-field-row">
+            <div class="form-field">
+                {{ form.fax.label_tag }}
+                {{ form.fax }}
+            </div>
+            <div class="form-field">
+                {{ form.neighborhood.label_tag }}
+                {{ form.neighborhood }}
+            </div>
+            <div class="form-field">
+                {{ form.date_of_foundation.label_tag }}
+                {{ form.date_of_foundation }}
+            </div>
+            <div class="form-field">
+                {{ form.web_site.label_tag }}
+                {{ form.web_site }}
+            </div>
+        </div>
+        <div class="form-field-row">
+            <div class="form-field">
+                {{ form.id_market_segment.label_tag }}
+                {{ form.id_market_segment }}
+            </div>
+            <div class="form-field">
+                {{ form.id_size.label_tag }}
+                {{ form.id_size }}
+            </div>
+            <div class="form-field">
+                {{ form.address_number.label_tag }}
+                {{ form.address_number }}
+            </div>
+            <div class="form-field">
+                {{ form.address_complement.label_tag }}
+                {{ form.address_complement }}
+            </div>
+        </div>
+        <div class="form-field-row">
+            <div class="form-field">
+                {{ form.payment_day.label_tag }}
+                {{ form.payment_day }}
+            </div>
+            <div class="form-field">
+                {{ form.is_requestor_in_field.label_tag }}
+                {{ form.is_requestor_in_field }}
+            </div>
+            <div class="form-field">
+                {{ form.payment_venc.label_tag }}
+                {{ form.payment_venc }}
+            </div>
+            <div class="form-field">
+                {{ form.company_responsible.label_tag }}
+                {{ form.company_responsible }}
+            </div>
+        </div>
+        <div class="form-field-row">
+            <div class="form-field">
+                {{ form.credit_or_debit_card.label_tag }}
+                {{ form.credit_or_debit_card }}
+            </div>
+        </div>
+        <!-- Adicione mais blocos 'form-field-row' conforme necessário -->
+        <input type="submit" class="btn btn-success" value="Salvar">
+    </div>
+</form>
+{% endblock %}

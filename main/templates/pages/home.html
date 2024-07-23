@@ -1,0 +1,184 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+  
+
+<div class="d-block mb-4 mb-md-0 py-4 "> 
+    <h4>Ordem de Serviços</h4> 
+</div>   
+<div class="row">
+    <div class="col-12 col-sm-6 col-xl-3 mb-5">
+      <div class="card border-0 shadow">
+        <div class="card-body">
+          <div class="row d-block d-xl-flex align-items-center">
+            <div
+              class="col-12 col-xl-5 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center">
+              <div class="icon-shape icon-shape-info rounded me-4 me-sm-0">
+                <i class="fas fa-file-alt fa-2x"></i>
+              </div> 
+            </div>
+            <div class="col-12 col-xl-7 px-xl-0">
+              <div class="d-none d-sm-block">
+                <h2 class="h6 text-gray-400 mb-0">OS Abertas</h2>
+                <h3 class="fw-extrabold mb-2">{{opened_os_count}}</h3>
+              </div> 
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> 
+    <div class="col-12 col-sm-6 col-xl-3 mb-5">
+        <div class="card border-0 shadow">
+          <div class="card-body">
+            <div class="row d-block d-xl-flex align-items-center">
+              <div
+                class="col-12 col-xl-5 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center">
+                <div class="icon-shape icon-shape-secondary rounded me-4 me-sm-0">
+                  <i class="fas fa-clock fa-2x"></i>
+                </div> 
+              </div>
+              <div class="col-12 col-xl-7 px-xl-0">
+                <div class="d-none d-sm-block">
+                  <h2 class="h6 text-gray-400 mb-0">OS Andamento</h2>
+                  <h3 class="fw-extrabold mb-2">{{in_progress_os_count}}</h3>
+                </div> 
+              </div>
+            </div>
+          </div>
+        </div>
+    </div> 
+    <div class="col-12 col-sm-6 col-xl-3 mb-5">
+        <div class="card border-0 shadow">
+          <div class="card-body">
+            <div class="row d-block d-xl-flex align-items-center">
+              <div
+                class="col-12 col-xl-5 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center">
+                <div class="icon-shape icon-shape-success rounded me-4 me-sm-0">
+                  <i class="fas fa-check fa-2x"></i>
+                </div> 
+              </div>
+              <div class="col-12 col-xl-7 px-xl-0">
+                <div class="d-none d-sm-block">
+                  <h2 class="h6 text-gray-400 mb-0">OS Concluidas</h2>
+                  <h3 class="fw-extrabold mb-2">{{completed_os_count}}</h3>
+                </div> 
+              </div>
+            </div>
+          </div>
+        </div>
+    </div> 
+    <div class="col-12 col-sm-6 col-xl-3 mb-5">
+        <div class="card border-0 shadow">
+          <div class="card-body">
+            <div class="row d-block d-xl-flex align-items-center">
+              <div
+                class="col-12 col-xl-5 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center">
+                <div class="icon-shape icon-shape-danger rounded me-4 me-sm-0">
+                  <i class="fas fa-times fa-2x"></i>
+                </div> 
+              </div>
+              <div class="col-12 col-xl-7 px-xl-0">
+                <div class="d-none d-sm-block">
+                  <h2 class="h6 text-gray-400 mb-0">OS Canceladas</h2>
+                  <h3 class="fw-extrabold mb-2">{{canceled_os_count}}</h3>
+                </div> 
+              </div>
+            </div>
+          </div>
+        </div>
+    </div> 
+</div>
+<div class="d-flex justify-content-between align-items-center flex-wrap mb-3"> 
+    <div class="col-12 col-md-6 col-lg-4">
+      <form method="get">
+        <div class="input-group input-group-with-space">
+          <select id="searchInput" name="setor" class="form-control">
+            <option value="">Selecione o setor</option>
+            {% for option in CHOICES_SETOR %}
+              <option value="{{ option.0 }}" {% if request.GET.setor == option.0 %}selected{% endif %}>{{ option.1 }}</option>
+            {% endfor %}
+          </select>
+          <button id="searchButton" class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+        </div>
+      </form> 
+    </div>   
+    <div class="col-12 col-md-6 col-lg-4 my-3">
+      <div class="d-flex justify-content-end align-items-center flex-wrap"> 
+        <a href="{% url 'os' %}" class="btn btn-gray-800 my-3 ms-3">
+          <i class="fas fa-plus px-1"></i> Ordem de Serviço
+        </a> 
+      </div> 
+    </div>  
+</div> 
+<div class="card card-body border-0 shadow table-wrapper table-responsive mb-5">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th class="border-gray-200">Empresa</th>
+                <th class="border-gray-200">Contato</th>
+                <th class="border-gray-200">Setor</th>
+                <th class="border-gray-200">Data de Entrada</th>
+                <th class="border-gray-200">Saída Prevista</th>
+                <th class="border-gray-200">Status OS</th> 
+                <th class="border-gray-200">PDF</th>
+                <th class="border-gray-200">Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for os in ordens %}      
+                <tr>
+                    <td>{{ os.equipamento.orcamento.solicitante }}</td>
+                    <td>{{ os.equipamento.orcamento.contato }}</td>
+                    <td>{{ os.setor }}</td>
+                    <td>{{ os.data_entrada }}</td>
+                    <td>{{ os.saida_prevista }}</td>
+                    <td>
+                      {% if os.status == "open" %}
+                        <p class="badge rounded-pill bg-success px-2 py-1">{{ os.get_status_display }}</p>
+                      {% elif os.status == "in_progress" %}
+                        <p class="badge rounded-pill bg-warning px-2 py-1">{{ os.get_status_display }}</p>
+                      {% elif os.status == "completed" %}
+                        <p class="badge rounded-pill bg-primary px-2 py-1">{{ os.get_status_display }}</p>
+                      {% elif os.status == "canceled" %}
+                        <p class="badge rounded-pill bg-danger px-2 py-1">{{ os.get_status_display }}</p>
+                      {% endif %}
+                    </td>  
+                    <td>
+                        {% if os.arquivo_pdf %}
+                        <a href="{{ os.arquivo_pdf.url }}?v={{ os.arquivo_pdf.date_created|date:"YmdHis" }}"><i class="fas fa-download"></i></a>
+                        {% else %}
+                        <span style="color: #e5e5e5">
+                            <i class="fas fa-download"></i>
+                        </span>
+                        {% endif %}
+                        
+                    </td>
+                    <td>
+                      <div class="btn-group">
+                        <button class="btn btn-link text-dark dropdown-toggle dropdown-toggle-split m-0 p-0"
+                          data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <span class="icon icon-sm">
+                            <span class="fas fa-ellipsis-h icon-dark"></span>
+                          </span>
+                          <span class="visually-hidden">Toggle Dropdown</span>
+                        </button>
+                        <div class="dropdown-menu py-0 dropdown-menu-right">
+                          <a class="dropdown-item rounded-top" href="#" ><span class="fas fa-eye me-2"></span>Ver detalhes</a>
+                          <a class="dropdown-item" href="{% url 'ordem-servico-edit' id=os.id %}"><span class="fas fa-edit me-2"></span>Editar</a>
+                          <a class="dropdown-item text-danger rounded-bottom" href="#"><span class="fas fa-trash-alt me-2"></span>Deletar</a>
+                        </div>
+                      </div>
+                    </td>
+                </tr>            
+            {% endfor %}
+        </tbody>
+    </table> 
+</div> 
+{% else %}
+<div class="d-block mb-4 mb-md-0 py-4 "> 
+  <h4>Faça login</h4> 
+</div>
+{% endif %}
+{% endblock content %}

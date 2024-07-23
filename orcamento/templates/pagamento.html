@@ -1,0 +1,39 @@
+{% extends 'layouts/base.html' %}
+{% load static %} 
+{% block content %}
+<div class="d-block mb-4 mb-md-0 py-4 "> 
+  <h4>Pagamento</h4> 
+</div>  
+<div class="card card-body border-0 shadow table-wrapper table-responsive mb-5"> 
+  <form method="post" class=" p-0   py-lg-4 mb-4 mb-md-0  "> 
+    <div class="row">
+      {% csrf_token %} 
+          <div class="row">
+            {% for field in form_payments %}
+            <div class="col-lg-4 col-sm-6"> 
+                <div class="form-group mb-4">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                    <div class="alert alert-danger alert-dismissible mt-2">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        {% for error in field.errors %}
+                        <span class="error-message">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div> 
+            {% endfor %}   
+            <div class="form-group d-flex justify-content-end ">  
+              <button class="btn btn-primary" type="submit">Concluir Orçamento</button>
+            </div> 
+          </div>    
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock content %}
+
+
+

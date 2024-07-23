@@ -1,0 +1,35 @@
+<!-- ordensServ.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h4>ORDENS DE SERVIÇO</h4>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Empresa</th>
+      <th scope="col">Contato</th>
+      <th scope="col">Data de Entrada</th>
+      <th scope="col">Saída Prevista</th>
+      <th scope="col">Arquivo PDF</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for os in ordens %}      
+      <tr>
+        <td>{{ os.razao_social }}</td>
+        <td>{{ os.contato }}</td>
+        <td>{{ os.data_entrada }}</td>
+        <td>{{ os.saida_prevista }}</td>
+        <td>
+          {% if os.arquivo_pdf %}
+            <a href="{{ os.arquivo_pdf.url }}" target="_blank">Visualizar PDF</a>
+          {% else %}
+            Nenhum arquivo PDF gerado
+          {% endif %}
+        </td>
+      </tr>            
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
